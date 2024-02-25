@@ -13,6 +13,11 @@ export default function Coinsplit() {
 
   useChain(open ? [peekRef, pookRef] : [pookRef, peekRef], [0, open ? 0.6 : 0]);
 
+  const radius = 90;
+  const circumference = 2 * Math.PI * radius;
+  const dashCount = 40; // Choose the number of dashes you want
+  const dasharray = circumference / dashCount;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-row items-center" onClick={() => toggle(!open)}>
@@ -21,12 +26,36 @@ export default function Coinsplit() {
             viewBox="0 0 200 240"
             style={{ width: "200px", height: "240px" }}
           >
+            <mask id="mask">
+              <rect width="200" height="240" fill="white" />
+              <circle
+                cx="100"
+                cy="100"
+                r={radius}
+                stroke="black"
+                fill="none"
+                strokeWidth="5"
+                strokeDasharray={`${dasharray}`}
+              />
+              <text
+                x="50%"
+                y="50%"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="120"
+                fontWeight="bold"
+                fontFamily="monospace"
+                fill="black"
+              >
+                M
+              </text>
+            </mask>
             <circle
               className="fill-lime-500"
               cx="100"
               cy="100"
               r="100"
-              style={{ mixBlendMode: "multiply" }}
+              style={{ mixBlendMode: "multiply", mask: "url(#mask)" }}
             />
             <text
               x="50%"
@@ -45,12 +74,36 @@ export default function Coinsplit() {
               viewBox="0 0 200 240"
               style={{ width: "200px", height: "240px" }}
             >
+              <mask id="mask">
+                <rect width="200" height="240" fill="white" />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r={radius}
+                  stroke="black"
+                  fill="none"
+                  strokeWidth="5"
+                  strokeDasharray={`${dasharray}`}
+                />
+                <text
+                  x="50%"
+                  y="50%"
+                  textAnchor="middle"
+                  dominantBaseline="middle"
+                  fontSize="120"
+                  fontWeight="bold"
+                  fontFamily="monospace"
+                  fill="black"
+                >
+                  M
+                </text>
+              </mask>
               <circle
                 className="fill-red-500"
                 cx="100"
                 cy="100"
                 r="100"
-                style={{ mixBlendMode: "multiply" }}
+                style={{ mixBlendMode: "multiply", mask: "url(#mask)" }}
               />
               <text
                 x="50%"
