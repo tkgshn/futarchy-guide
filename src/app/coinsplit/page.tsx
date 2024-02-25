@@ -140,7 +140,11 @@ export function USDCSplit({ active }: { active?: boolean }) {
       onClick={active ? () => toggle(!open) : undefined}
     >
       <animated.div style={peek}>
-        <svg viewBox="0 0 200 240" style={{ width: "200px", height: "240px" }}>
+        <svg
+          className="mix-blend-lighten"
+          viewBox="0 0 200 240"
+          style={{ width: "200px", height: "240px" }}
+        >
           <mask id={MASK_ID}>
             <rect width="200" height="240" fill="white" />
             <circle
@@ -166,7 +170,7 @@ export function USDCSplit({ active }: { active?: boolean }) {
             </text>
           </mask>
           <circle
-            className="fill-cyan-500"
+            className="fill-cyan-600"
             cx="100"
             cy="100"
             r="100"
@@ -186,22 +190,23 @@ export function USDCSplit({ active }: { active?: boolean }) {
       <animated.div style={pook} className="flex flex-row justify-end">
         <div>
           <svg
+            className="mix-blend-lighten"
             viewBox="0 0 200 240"
             style={{ width: "200px", height: "240px" }}
           >
             <circle
-              className="fill-purple-500"
+              className="fill-violet-600"
               cx="100"
               cy="100"
               r="100"
-              style={{ mixBlendMode: "multiply", mask: `url(#${MASK_ID})` }}
+              style={{ mask: `url(#${MASK_ID})` }}
             />
             <text
               x="50%"
               y="220"
               textAnchor="middle"
               className="fill-purple-500 font-mono"
-              style={{ mixBlendMode: "multiply", fontSize: "20px" }}
+              style={{ fontSize: "20px" }}
             >
               1 {open ? "f" : ""}USDC
             </text>
