@@ -6,7 +6,11 @@ export default function Coinsplit() {
   const [open, toggle] = useState(false);
 
   const peekRef = useSpringRef();
-  const peek = useSpring({ ref: peekRef, width: open ? 100 : 0 });
+  const peek = useSpring({
+    ref: peekRef,
+    width: open ? 100 : 0,
+    config: { friction: open ? 10 : undefined },
+  });
 
   const pookRef = useSpringRef();
   const pook = useSpring({ ref: pookRef, width: open ? 500 : 200 });
@@ -39,7 +43,7 @@ export default function Coinsplit() {
               />
               <text
                 x="50%"
-                y="50%"
+                y="48%"
                 textAnchor="middle"
                 dominantBaseline="middle"
                 fontSize="120"
@@ -74,30 +78,6 @@ export default function Coinsplit() {
               viewBox="0 0 200 240"
               style={{ width: "200px", height: "240px" }}
             >
-              <mask id="mask">
-                <rect width="200" height="240" fill="white" />
-                <circle
-                  cx="100"
-                  cy="100"
-                  r={radius}
-                  stroke="black"
-                  fill="none"
-                  strokeWidth="5"
-                  strokeDasharray={`${dasharray}`}
-                />
-                <text
-                  x="50%"
-                  y="50%"
-                  textAnchor="middle"
-                  dominantBaseline="middle"
-                  fontSize="120"
-                  fontWeight="bold"
-                  fontFamily="monospace"
-                  fill="black"
-                >
-                  M
-                </text>
-              </mask>
               <circle
                 className="fill-red-500"
                 cx="100"
