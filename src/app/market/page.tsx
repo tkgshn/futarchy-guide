@@ -54,8 +54,8 @@ export function Market({
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div className="relative w-[400px] h-[300px] bg-white ">
-      <div className="mix-blend-multiply">
+    <div className="relative w-[400px] h-[300px]">
+      <div className="mix-blend-lighten">
         {[left3, left2, left1].map((spring, index) => (
           <animated.div
             /** LEFT side */
@@ -68,7 +68,7 @@ export function Market({
           </animated.div>
         ))}
       </div>
-      <div className="mix-blend-multiply">
+      <div className="mix-blend-lighten">
         {[right3, right2, right1].map((spring, index) => (
           <animated.div
             /** RIGHT side */
