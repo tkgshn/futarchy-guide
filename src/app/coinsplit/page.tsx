@@ -49,7 +49,7 @@ export function Coin({
         </text>
       </mask>
       <circle
-        className={"fill-black"}
+        className={"fill-white"}
         cx="105"
         cy="105"
         r="104"

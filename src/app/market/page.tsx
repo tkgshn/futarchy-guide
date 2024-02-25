@@ -1,4 +1,5 @@
 "use client"
+import { COIN_COLOR } from "@/constants"
 import { Coinsplit, USDCSplit } from "../coinsplit/page"
 
 import { useSpring, animated } from "@react-spring/web"
@@ -120,7 +121,7 @@ export function Market({
         ))}
       </div>
       <div
-        className="bg-zinc-600 rounded-xl border-zinc-300"
+        className="bg-zinc-600 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center"
         style={{
           position: "absolute",
           top: "0",
@@ -130,7 +131,12 @@ export function Market({
           width: "250px",
           height: "250px",
         }}
-      ></div>
+      >
+        <div className="text-5xl mb-3">the market</div>
+        <div>
+          1 <span className={`text-[${COIN_COLOR}]`}>META</span> :: 49,000 USDC
+        </div>
+      </div>
     </div>
   )
 }
