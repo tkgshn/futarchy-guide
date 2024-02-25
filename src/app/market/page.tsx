@@ -25,17 +25,54 @@ export function Market({
     top:
       balance > 2 ? "0%" : balance > 1 ? "100%" : balance > 0 ? "103%" : "106%",
   })
+  const left4 = useSpring({
+    left:
+      balance > 3
+        ? "50%"
+        : balance > 2
+        ? "0%"
+        : balance > 1
+        ? "3%"
+        : balance > 0
+        ? "6%"
+        : "9%",
+    top:
+      balance > 3
+        ? "0%"
+        : balance > 2
+        ? "100%"
+        : balance > 1
+        ? "103%"
+        : balance > 0
+        ? "106%"
+        : "109%",
+  })
+
   const right1 = useSpring({
-    left: balance > 2 ? "100%" : "50%",
-    top: balance > 2 ? "100%" : "0%",
+    left: balance > 3 ? "100%" : "50%",
+    top: balance > 3 ? "100%" : "0%",
   })
   const right2 = useSpring({
-    left: balance > 2 ? "103%" : balance > 1 ? "100%" : "50%",
-    top: balance > 2 ? "103%" : balance > 1 ? "100%" : "0%",
+    left: balance > 3 ? "103%" : balance > 2 ? "100%" : "50%",
+    top: balance > 3 ? "103%" : balance > 2 ? "100%" : "0%",
   })
   const right3 = useSpring({
     left:
-      balance > 2
+      balance > 3
+        ? "106%"
+        : balance > 2
+        ? "103%"
+        : balance > 1
+        ? "100%"
+        : "50%",
+    top:
+      balance > 3 ? "106%" : balance > 2 ? "103%" : balance > 1 ? "100%" : "0%",
+  })
+  const right4 = useSpring({
+    left:
+      balance > 3
+        ? "109%"
+        : balance > 2
         ? "106%"
         : balance > 1
         ? "103%"
@@ -43,20 +80,21 @@ export function Market({
         ? "100%"
         : "50%",
     top:
-      balance > 2 ? "106%" : balance > 1 ? "103%" : balance > 0 ? "100%" : "0%",
+      balance > 3
+        ? "109%"
+        : balance > 2
+        ? "106%"
+        : balance > 1
+        ? "103%"
+        : balance > 0
+        ? "100%"
+        : "0%",
   })
-  // Set the drag hook and define component movement based on gesture data
-
-  const doSomething = () => {
-    // Perform the desired action when left or right is dragged into the dashed rectangle
-  }
-
-  const [hovered, setHovered] = useState(false)
 
   return (
     <div className="relative w-[400px] h-[300px]">
       <div className="mix-blend-lighten">
-        {[left3, left2, left1].map((spring, index) => (
+        {[left4, left3, left2, left1].map((spring, index) => (
           <animated.div
             /** LEFT side */
             key={index}
@@ -69,7 +107,7 @@ export function Market({
         ))}
       </div>
       <div className="mix-blend-lighten">
-        {[right3, right2, right1].map((spring, index) => (
+        {[right4, right3, right2, right1].map((spring, index) => (
           <animated.div
             /** RIGHT side */
             key={index}
@@ -82,15 +120,13 @@ export function Market({
         ))}
       </div>
       <div
-        onMouseOver={() => setHovered(true)}
-        onMouseOut={() => setHovered(false)}
-        className="bg-blue-200 rounded-xl"
+        className="bg-zinc-600 rounded-xl border-zinc-300"
         style={{
           position: "absolute",
           top: "0",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          border: "4px dashed black",
+          border: "4px dashed",
           width: "250px",
           height: "250px",
         }}
