@@ -68,6 +68,7 @@ const BetterTypeAnimation = (
   const finalText = props.sequence.findLast(
     (x) => typeof x === "string"
   ) as string
+
   return (
     <animated.div className="relative" style={spring}>
       <div
@@ -94,6 +95,7 @@ const BetterTypeAnimation = (
             ...props.sequence,
             () => {
               if (!props.fastForward) {
+                //TODO? this might need to use a ref, but not sure i even care.
                 props.doneWaiting()
               }
             },
@@ -167,14 +169,16 @@ const Block1 = ({
   )
 }
 
-const Block2 = ({
+const Block = ({
   read,
   doneWaiting,
   fade,
+  sequences,
 }: {
   read: number
   doneWaiting: () => void
   fade: boolean
+  sequences: Parameters<typeof TypeAnimation>[0]["sequence"][]
 }) => {
   const spring = useSpring({
     from: { opacity: 1 },
@@ -186,20 +190,22 @@ const Block2 = ({
 
   return (
     <animated.div className="flex flex-col" style={spring}>
-      {read > 0 && (
-        <BetterTypeAnimation
-          doneWaiting={doneWaiting}
-          sequence={[
-            500,
-            "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
-            500,
-          ]}
-        />
+      {sequences.map(
+        (sequence, index) =>
+          read > index && (
+            <BetterTypeAnimation
+              key={
+                index + sequence.filter((x) => typeof x === "string").join("")
+              }
+              doneWaiting={doneWaiting}
+              sequence={sequence}
+              fastForward={read > index + 1}
+            />
+          )
       )}
     </animated.div>
   )
 }
-
 export default function Intro() {
   const [read, setRead] = useState(0)
 
@@ -236,10 +242,17 @@ export default function Intro() {
           doneWaiting={() => setWaiting(false)}
           fade={read > 3}
         />
-        <Block2
+        <Block
           read={read - 3}
           doneWaiting={() => setWaiting(false)}
           fade={step === "2"}
+          sequences={[
+            [
+              500,
+              "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
+              500,
+            ],
+          ]}
         />
       </div>
       {/* <button
