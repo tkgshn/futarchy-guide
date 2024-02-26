@@ -49,31 +49,57 @@ const useHash = () => {
 }
 
 const BetterTypeAnimation = (
-  props: Parameters<typeof TypeAnimation>[0] & { doneWaiting: () => void }
+  props: Parameters<typeof TypeAnimation>[0] & {
+    doneWaiting: () => void
+    fastForward?: boolean
+  }
 ) => {
   const [ref, { height }] = useMeasure()
 
-  const [spring, api] = useSpring(() => ({ from: { height: 0 } }), [])
+  const [spring, api] = useSpring(
+    () => ({ from: { height: 0, marginTop: 0 } }),
+    []
+  )
   useEffect(() => {
-    api.start({ to: { height } })
+    api.start({ to: { height: height, marginTop: 24 } })
   }, [api, height])
   console.log("height", height)
 
+  const finalText = props.sequence.findLast(
+    (x) => typeof x === "string"
+  ) as string
   return (
     <animated.div className="relative" style={spring}>
       <div
         ref={ref}
-        aria-hidden={true}
-        className={"opacity-0 select-none " + defaultParams.className}
+        className={
+          (props.fastForward ? "opacity-100" : "opacity-0") +
+          " select-none " +
+          defaultParams.className
+        }
       >
-        {props.sequence[props.sequence.length - 1] as string}
+        {finalText}
       </div>
-      <TypeAnimation
-        {...defaultParams}
-        {...props}
-        className="text-2xl whitespace-pre-line text-left w-full absolute top-0 left-0 right-0 bottom-0"
-        sequence={[250, ...props.sequence, props.doneWaiting]}
-      />
+      <span className={props.fastForward ? "opacity-0" : "opacity-100"}>
+        <TypeAnimation
+          aria-hidden={true}
+          {...defaultParams}
+          {...props}
+          className={
+            "absolute top-0 left-0 right-0 bottom-0 select-none " +
+            defaultParams.className
+          }
+          sequence={[
+            250,
+            ...props.sequence,
+            () => {
+              if (!props.fastForward) {
+                props.doneWaiting()
+              }
+            },
+          ]}
+        />
+      </span>
     </animated.div>
   )
 }
@@ -96,10 +122,11 @@ const Block1 = ({
   })
 
   return (
-    <animated.div className="flex flex-col gap-4" style={spring}>
+    <animated.div className="flex flex-col" style={spring}>
       {read > -1 && (
         <BetterTypeAnimation
           doneWaiting={doneWaiting}
+          fastForward={read > 0}
           sequence={[
             "The year is 2064.",
             500,
@@ -110,6 +137,7 @@ const Block1 = ({
       {read > 0 && (
         <BetterTypeAnimation
           doneWaiting={doneWaiting}
+          fastForward={read > 1}
           sequence={[
             "You know tractor beams.",
             500,
@@ -120,6 +148,7 @@ const Block1 = ({
       {read > 1 && (
         <BetterTypeAnimation
           doneWaiting={doneWaiting}
+          fastForward={read > 2}
           sequence={[
             "Yeah right.",
             500,
@@ -129,8 +158,42 @@ const Block1 = ({
       )}
       {read > 2 && (
         <BetterTypeAnimation
+          fastForward={read > 3}
           doneWaiting={doneWaiting}
           sequence={["You want in."]}
+        />
+      )}
+    </animated.div>
+  )
+}
+
+const Block2 = ({
+  read,
+  doneWaiting,
+  fade,
+}: {
+  read: number
+  doneWaiting: () => void
+  fade: boolean
+}) => {
+  const spring = useSpring({
+    from: { opacity: 1 },
+    to: {
+      opacity: fade ? 0.5 : 1,
+      y: fade ? -48 : 0,
+    },
+  })
+
+  return (
+    <animated.div className="flex flex-col" style={spring}>
+      {read > 0 && (
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
+          sequence={[
+            500,
+            "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
+            500,
+          ]}
         />
       )}
     </animated.div>
@@ -153,9 +216,9 @@ export default function Intro() {
 
   const nextChat = () => {
     setWaiting(true)
-    if (!waiting) {
-      setRead((prev) => prev + 1)
-    }
+    // if (!waiting) {
+    setRead((prev) => prev + 1)
+    //}
   }
 
   return (
@@ -173,8 +236,8 @@ export default function Intro() {
           doneWaiting={() => setWaiting(false)}
           fade={read > 3}
         />
-        <Block1
-          read={read - 4}
+        <Block2
+          read={read - 3}
           doneWaiting={() => setWaiting(false)}
           fade={step === "2"}
         />
