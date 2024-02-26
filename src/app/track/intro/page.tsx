@@ -30,7 +30,6 @@ const defaultParams = {
   wrapper: "div",
   cursor: false,
   className: "text-2xl whitespace-pre-line text-left w-full",
-  preRenderFirstString: true,
 } as const
 
 const useHash = () => {
@@ -73,7 +72,7 @@ const BetterTypeAnimation = (
         {...defaultParams}
         {...props}
         className="text-2xl whitespace-pre-line text-left w-full absolute top-0 left-0 right-0 bottom-0"
-        sequence={[100, ...props.sequence, props.doneWaiting]}
+        sequence={[250, ...props.sequence, props.doneWaiting]}
       />
     </animated.div>
   )
@@ -92,7 +91,7 @@ const Block1 = ({
     from: { opacity: 1 },
     to: {
       opacity: fade ? 0.5 : 1,
-      // y: fade ? -100 : 0
+      y: fade ? -48 : 0,
     },
   })
 
@@ -102,7 +101,6 @@ const Block1 = ({
         <BetterTypeAnimation
           doneWaiting={doneWaiting}
           sequence={[
-            " ",
             "The year is 2064.",
             500,
             "The year is 2064. \n You just got word on the byte nexus that the Meta-dao might be the first corp to fit asteroid miners with hypertronic tractor beams.",
@@ -113,7 +111,6 @@ const Block1 = ({
         <BetterTypeAnimation
           doneWaiting={doneWaiting}
           sequence={[
-            " ",
             "You know tractor beams.",
             500,
             "You know tractor beams. The biggest beam corps from Earth say hypertronic isn’t worth the plutonium, they say it barely moves the needle.",
@@ -121,21 +118,19 @@ const Block1 = ({
         />
       )}
       {read > 1 && (
-        <TypeAnimation
-          {...defaultParams}
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
           sequence={[
-            " ",
             "Yeah right.",
             500,
             "Yeah right. Hypertronic changes everything.",
-            doneWaiting,
           ]}
         />
       )}
       {read > 2 && (
-        <TypeAnimation
-          {...defaultParams}
-          sequence={[" ", "You want in.", doneWaiting]}
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
+          sequence={["You want in."]}
         />
       )}
     </animated.div>
