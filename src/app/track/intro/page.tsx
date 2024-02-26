@@ -250,8 +250,24 @@ export default function Intro() {
             [
               500,
               "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
-              500,
             ],
+            ["That's where the market comes in."],
+            [
+              "You check out prices.",
+              500,
+              "You check out prices. 1 META = 49,000 USDC.",
+            ],
+            [
+              "It’s low. ",
+              250,
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.  ",
+              250,
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early. ",
+            ],
+            ["."],
+            ["You portion out your budget and buy a few META. "],
+            ["."],
+            ["But that was a mistake. MetaDAO is a futarchy. "],
           ]}
         />
       </div>
