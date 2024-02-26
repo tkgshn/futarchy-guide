@@ -5,6 +5,13 @@ const FillableBag = ({}: {
   targetPosition: [x: string, y: string] // where thingies come from when put into bag, or go to when removed from bag
   bag: ReactNode // the bag
   thingy: ReactNode // a thingy
-  fillBag: (n: number) => void // fill the bag with n thingies, animated
-  emptyBag: (n: number) => void // empty the bag of n thingies, animated
-}) => {}
+  thingies: number // the number of thingies in the bag
+}) => {
+  // use useEffect to watch for the number of thingies in the bag changing, and animate the thingies moving to and from the bag
+
+  // use useTrail to animate the thingies moving to and from the bag
+
+  // use useSpring to animate the bag growing and shrinking based on the number of thingies in it
+
+  return <></>
+}
