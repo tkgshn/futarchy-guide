@@ -23,19 +23,11 @@ const Enter = ({
   )
 }
 
-const TypeyText = () => {
-  return (
-    <TypeAnimation
-      splitter={(str) => str.split(/(?= )/)}
-      sequence={[
-        "OK, in order to get started, you're going to need some META!", // Types 'One'
-        1000, // Waits 1s
-      ]}
-      wrapper="span"
-      cursor={false}
-      style={{ fontSize: "2em", display: "inline-block" }}
-    />
-  )
+const defaultParams = {
+  splitter: (str) => str.split(/(?= )/),
+  wrapper: "span",
+  cursor: false,
+  style: { fontSize: "2em", display: "inline-block" },
 }
 
 export default function Home() {
