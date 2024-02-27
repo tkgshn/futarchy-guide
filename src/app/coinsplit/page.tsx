@@ -80,8 +80,8 @@ export function Coin({
   )
 }
 
-export function Coinsplit({ active }: { active?: boolean }) {
-  const [open, toggle] = useState(false)
+export function Coinsplit({ open }: { open?: boolean }) {
+  //const [open, toggle] = useState(false)
 
   const peekRef = useSpringRef()
   const peek = useSpring({
@@ -98,7 +98,7 @@ export function Coinsplit({ active }: { active?: boolean }) {
   return (
     <div
       className="flex flex-row items-center"
-      onClick={active ? () => toggle(!open) : undefined}
+      //onClick={active ? () => toggle(!open) : undefined}
     >
       <animated.div style={peek}>
         <Coin condition="pass" showPrefix={open} />

@@ -190,7 +190,7 @@ export function Market({ step }: { step: number }) {
         <MarketBase
           leftBalance={leftBalance}
           buyLeft={buyLeft}
-          left={<Coinsplit active={false} />}
+          left={<Coinsplit />}
           right={<USDCBag amount={rightBalance} />}
         />
       )}

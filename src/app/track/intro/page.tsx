@@ -6,25 +6,6 @@ import { useParams, useRouter } from "next/navigation"
 import useMeasure from "react-use-measure"
 import { Market } from "@/app/market/page"
 
-const Enter = ({
-  isVisible,
-  children,
-}: {
-  isVisible: boolean
-  children: ReactNode
-}) => {
-  const animation = useSpring({
-    opacity: isVisible ? 1 : 0,
-    transform: isVisible ? "translateY(0)" : "translateY(-100px)",
-  })
-
-  return (
-    <animated.div className="overflow-hidden" style={animation}>
-      {children}
-    </animated.div>
-  )
-}
-
 const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
   speed: 85,
@@ -33,7 +14,7 @@ const defaultParams = {
   className: "text-2xl whitespace-pre-line text-left w-full",
 } as const
 
-const useHash = () => {
+export const useHash = () => {
   const router = useRouter()
 
   const params = useParams()
@@ -49,7 +30,7 @@ const useHash = () => {
   return [hash, pushHash] as const
 }
 
-const BetterTypeAnimation = (
+export const BetterTypeAnimation = (
   props: Parameters<typeof TypeAnimation>[0] & {
     doneWaiting: () => void
     fastForward?: boolean
@@ -172,7 +153,7 @@ const Block1 = ({
   )
 }
 
-const Block = ({
+export const Block = ({
   read,
   doneWaiting,
   fade,
