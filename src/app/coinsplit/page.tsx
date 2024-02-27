@@ -1,6 +1,7 @@
 "use client"
 import { useSpring, animated, useSpringRef, useChain } from "@react-spring/web"
-import { useState } from "react"
+import { ReactNode, useState } from "react"
+import { DemoZone } from "../track/intro/page"
 
 export function Coin({
   condition,
@@ -77,6 +78,55 @@ export function Coin({
         1 {showPrefix ? (condition === "pass" ? "p" : "f") : ""}META
       </text> */}
     </svg>
+  )
+}
+
+export function Splitter({
+  split,
+  left,
+  right,
+}: {
+  split?: boolean
+  left: ReactNode
+  right: ReactNode
+}) {
+  const { pos } = useSpring({
+    from: { pos: split ? 0 : 50 },
+    to: async (next) => {
+      await next({
+        pos: split ? 40 : 50,
+        config: { friction: split ? 10 : undefined },
+      })
+      await next({ pos: split ? 0 : 50, config: {} })
+    },
+    //reverse: split,
+  })
+
+  return (
+    <>
+      <animated.div
+        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten"
+        style={{ left: pos.to((x) => x + "%") }}
+      >
+        {left}
+      </animated.div>
+      <animated.div
+        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten"
+        style={{ left: pos.to((x) => 100 - x + "%") }}
+      >
+        {right}
+      </animated.div>
+    </>
+  )
+}
+
+const CoinSplit2 = ({ split }: { split?: boolean }) => {
+  return (
+    <Splitter
+      split={split}
+      left={<Coin condition="pass" showPrefix />}
+      right={<Coin condition="fail" showPrefix />}
+    />
   )
 }
 
@@ -232,10 +282,16 @@ export function USDCSplit({ active }: { active?: boolean }) {
 }
 
 export default function Fart() {
+  const [open, toggle] = useState(false)
+
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <Coinsplit active />
-      <USDCSplit active />
+    <main
+      className="flex min-h-screen flex-col items-center p-24"
+      onClick={() => toggle(!open)}
+    >
+      <DemoZone>
+        <CoinSplit2 split={open} />
+      </DemoZone>
     </main>
   )
 }
