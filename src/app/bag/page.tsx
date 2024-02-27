@@ -1,6 +1,6 @@
 "use client"
 import { MutableRefObject, ReactNode, useRef, useState } from "react"
-import { animated, useTransition } from "@react-spring/web"
+import { animated, useSpring, useTransition } from "@react-spring/web"
 
 const Emitter = ({
   emitRef,
@@ -16,13 +16,14 @@ const Emitter = ({
   const [inFlight, setInFlight] = useState<ThingyInFlight[]>([])
 
   const transitions = useTransition(inFlight, {
-    from: { opacity: 0, left: source[0], top: source[1] },
-    to: { opacity: 1, left: target[0], top: target[1] },
+    from: { left: source[0], top: source[1] },
+    to: { left: target[0], top: target[1] },
     enter: (id) => async (next, cancel) => {
       console.log("entering", id)
       await next({ opacity: 1, left: target[0], top: target[1] })
       setInFlight((prev) => prev.filter((x) => x.key !== id.key))
     },
+    config: { tension: 50, friction: 20 },
     //leave: { opacity: 1 },
   })
 
@@ -37,7 +38,10 @@ const Emitter = ({
   return (
     <>
       {transitions((style) => (
-        <animated.div className={"absolute"} style={style}>
+        <animated.div
+          className={"absolute translate-x-[-50%] translate-y-[-50%]"}
+          style={style}
+        >
           {particle}
         </animated.div>
       ))}
@@ -47,7 +51,7 @@ const Emitter = ({
 
 type ThingyInFlight = { key: string }
 
-const FillableBag = ({
+export const FillableBag = ({
   bagPosition: [bagX, bagY],
   targetPosition: [targetX, targetY],
   bag,
@@ -62,16 +66,16 @@ const FillableBag = ({
 }) => {
   const emitRef = useRef<null | (() => void)>(null)
   const [nummies, setNummies] = useState(0)
-  /* 
+
   const [spring, api] = useSpring(
     () => ({
       top: bagY,
       left: bagX,
-      transform: `scale(${1 + nummies / 10})`,
-      config: { tension: 200, friction: 20 },
+      //transform: `scale(${1 + nummies / 10})`,
+      //config: { tension: 200, friction: 20 },
     }),
     [nummies]
-  ) */
+  )
 
   return (
     <>
@@ -82,8 +86,8 @@ const FillableBag = ({
         particle={thingy}
       />
       <animated.div
-        className={"absolute"}
-        //style={spring}
+        className={"absolute translate-x-[-50%] translate-y-[-50%]"}
+        style={spring}
         onClick={() => emitRef.current?.()}
       >
         {bag}

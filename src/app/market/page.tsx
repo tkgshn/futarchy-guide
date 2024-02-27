@@ -5,6 +5,7 @@ import { Coinsplit, USDCSplit } from "../coinsplit/page"
 import { useSpring, animated } from "@react-spring/web"
 import { useEffect, useState } from "react"
 import { DemoZone } from "../track/intro/page"
+import { FillableBag } from "../bag/page"
 
 function useSpringEnter() {
   const [spring, api] = useSpring(() => ({ from: { opacity: 0, y: -500 } }), [])
@@ -83,49 +84,6 @@ export function MarketBase({
         : "109%",
   })
 
-  const right1 = useSpring({
-    left: balance > 3 ? "100%" : "50%",
-    top: balance > 3 ? "100%" : "0%",
-  })
-  const right2 = useSpring({
-    left: balance > 3 ? "103%" : balance > 2 ? "100%" : "50%",
-    top: balance > 3 ? "103%" : balance > 2 ? "100%" : "0%",
-  })
-  const right3 = useSpring({
-    left:
-      balance > 3
-        ? "106%"
-        : balance > 2
-        ? "103%"
-        : balance > 1
-        ? "100%"
-        : "50%",
-    top:
-      balance > 3 ? "106%" : balance > 2 ? "103%" : balance > 1 ? "100%" : "0%",
-  })
-  const right4 = useSpring({
-    left:
-      balance > 3
-        ? "109%"
-        : balance > 2
-        ? "106%"
-        : balance > 1
-        ? "103%"
-        : balance > 0
-        ? "100%"
-        : "50%",
-    top:
-      balance > 3
-        ? "109%"
-        : balance > 2
-        ? "106%"
-        : balance > 1
-        ? "103%"
-        : balance > 0
-        ? "100%"
-        : "0%",
-  })
-
   return (
     <>
       <div className="mix-blend-lighten">
@@ -141,18 +99,18 @@ export function MarketBase({
           </animated.div>
         ))}
       </div>
-      <div className="mix-blend-lighten">
-        {[right4, right3, right2, right1].map((spring, index) => (
-          <animated.div
-            /** RIGHT side */
-            key={index}
-            className="absolute translate-x-[-50%] translate-y-[-50%]"
-            style={spring}
-            onClick={() => setBalance((prev) => prev - 1)}
-          >
-            {right}
-          </animated.div>
-        ))}
+      <div>
+        <FillableBag
+          bagPosition={["100%", "100%"]}
+          targetPosition={["50%", "0%"]}
+          bag={<div className="scale-[10] ">🛍️</div>}
+          thingy={
+            <div className="scale-[0.5]">
+              <USDCSplit active={false} />
+            </div>
+          }
+          thingies={5}
+        />
       </div>
     </>
   )
@@ -160,7 +118,7 @@ export function MarketBase({
 
 export function Market({ step }: { step: number }) {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center select-none">
       {step > 1 && (
         <MarketBase
           left={<Coinsplit active={false} />}
