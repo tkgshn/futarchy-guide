@@ -35,7 +35,7 @@ export function USDCBag({ amount }: { amount: number }) {
           height: "250px",
         }}
       >
-        <div className="text-5xl mb-3">
+        <div className="text-5xl">
           $
           <animated.span style={{ x }}>
             {amountSpring.to((x) => x.toFixed(0))}
