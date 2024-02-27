@@ -1,6 +1,6 @@
 "use client"
 import { useSpring, animated, useSpringRef, useChain } from "@react-spring/web"
-import { ReactNode, useState } from "react"
+import { ReactNode, useEffect, useState } from "react"
 import { DemoZone } from "../track/intro/page"
 
 export function Coin({
@@ -90,17 +90,23 @@ export function Splitter({
   left: ReactNode
   right: ReactNode
 }) {
-  const { pos } = useSpring({
-    from: { pos: split ? 0 : 50 },
-    to: async (next) => {
-      await next({
-        pos: split ? 40 : 50,
-        config: { friction: split ? 10 : undefined },
-      })
-      await next({ pos: split ? 0 : 50, config: {} })
-    },
-    //reverse: split,
-  })
+  const [{ pos }, api] = useSpring(
+    () => ({
+      from: { pos: split ? 0 : 50 },
+    }),
+    []
+  )
+  useEffect(() => {
+    api.start({
+      to: async (next) => {
+        await next({
+          pos: split ? 40 : 50,
+          config: { friction: split ? 10 : undefined },
+        })
+        await next({ pos: split ? 0 : 50, config: {} })
+      },
+    })
+  }, [split, api])
 
   return (
     <>
@@ -120,7 +126,7 @@ export function Splitter({
   )
 }
 
-const CoinSplit2 = ({ split }: { split?: boolean }) => {
+export const Coinsplit = ({ split }: { split?: boolean }) => {
   return (
     <Splitter
       split={split}
@@ -258,7 +264,7 @@ export default function Fart() {
       onClick={() => toggle(!open)}
     >
       <DemoZone>
-        <CoinSplit2 split={open} />
+        <Coinsplit split={open} />
       </DemoZone>
     </main>
   )

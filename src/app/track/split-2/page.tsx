@@ -31,7 +31,7 @@ export default function Chapter2() {
         />
       </div>
       <DemoZone>
-        <Coinsplit open={read > splitCoinAt} />
+        <Coinsplit split={read > splitCoinAt ? true : false} />
       </DemoZone>
       {/* <button
         className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
