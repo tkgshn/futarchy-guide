@@ -87,7 +87,7 @@ export const FillableBag = ({
       <animated.div
         className={"absolute translate-x-[-50%] translate-y-[-50%]"}
         style={spring}
-        onClick={() => emitRef.current?.()}
+        //onClick={() => emitRef.current?.()}
       >
         {bag}
       </animated.div>

@@ -12,36 +12,43 @@ function useSpringEnter() {
   return spring
 }
 
+const BIGGLIEST_AMOUNT = 147000
+const SMOLLEST_AMOUNT = 147000 - 50000 * 3
+
+const radiusFromArea = (area: number) => Math.sqrt(area / Math.PI)
+const BIGGLIEST_AREA = 125 * 125 * Math.PI
+const SMOLLEST_AREA = 75 * 75 * Math.PI
+
 export function USDCBag({ amount }: { amount: number }) {
   const spring = useSpringEnter()
 
-  const { amountSpring, x } = useSpring({
+  const progress =
+    (amount - SMOLLEST_AMOUNT) / (BIGGLIEST_AMOUNT - SMOLLEST_AMOUNT)
+  const area = SMOLLEST_AREA + progress * (BIGGLIEST_AREA - SMOLLEST_AREA)
+  const { amountSpring, size } = useSpring({
     amountSpring: amount,
-    x: amount / 10000,
+    size: radiusFromArea(area) * 2 + "px",
+    config: { duration: 1500 },
   })
 
   return (
     <animated.div style={spring}>
-      <div
-        className="rounded-full border-zinc-300 flex flex-col justify-center items-center font-mono text-center select-none"
+      <animated.div
+        className="rounded-full border-white flex flex-col justify-center items-center font-mono text-center select-none border-4"
         style={{
           position: "absolute",
           background: USDC_COLOR,
           top: "0",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          border: "4px dashed",
-          width: "250px",
-          height: "250px",
+          width: size,
+          height: size,
         }}
       >
         <div className="text-5xl">
-          $
-          <animated.span style={{ x }}>
-            {amountSpring.to((x) => x.toFixed(0))}
-          </animated.span>
+          $<animated.span>{amountSpring.to((x) => x.toFixed(0))}</animated.span>
         </div>
-      </div>
+      </animated.div>
     </animated.div>
   )
 }

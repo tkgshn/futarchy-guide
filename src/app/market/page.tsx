@@ -6,6 +6,7 @@ import { useSpring, animated } from "@react-spring/web"
 import { MutableRefObject, useEffect, useRef, useState } from "react"
 import { DemoZone } from "../track/intro/page"
 import { FillableBag } from "../bag/page"
+import { USDCBag } from "../bag/usdcbag/page"
 
 function useSpringEnter() {
   const [spring, api] = useSpring(() => ({ from: { opacity: 0, y: -500 } }), [])
@@ -45,7 +46,7 @@ export function MarketBase({
   left,
   right,
   buyLeft,
-  leftBalance,
+  leftBalance, // this is a lie. its actually like 4 minus this number
 }: {
   left: React.ReactNode
   right: React.ReactNode
@@ -109,7 +110,7 @@ export function MarketBase({
           emitRef={buyLeft}
           bagPosition={["100%", "100%"]}
           targetPosition={["50%", "0%"]}
-          bag={<div className="scale-[10] ">🛍️</div>}
+          bag={right}
           thingy={
             <div className="scale-[0.5]">
               <USDCSplit active={false} />
@@ -130,14 +131,17 @@ const LEFT_BALANCE_EACH_STEP = {
   1: 4,
 }
 
+const STARTING_USDC_BALANCE = 147000
 export function Market({ step }: { step: number }) {
   const buyLeft = useRef<null | (() => void)>(null)
 
-  const [leftBalance, setLeftBalance] = useState(4)
+  const [leftBalance, setLeftBalance] = useState(4) // this is a lie. its actually like 4 minus this number
+  const [rightBalance, setRightBalance] = useState(147000)
 
-  const prevStep = useRef(step)
+  const prevStep = useRef(0)
   useEffect(() => {
     const buyStuff = async () => {
+      setRightBalance(147000 - 49000)
       buyLeft.current?.()
       await sleep(100)
       buyLeft.current?.()
@@ -187,7 +191,7 @@ export function Market({ step }: { step: number }) {
           leftBalance={leftBalance}
           buyLeft={buyLeft}
           left={<Coinsplit active={false} />}
-          right={<USDCSplit active={false} />}
+          right={<USDCBag amount={rightBalance} />}
         />
       )}
       {step > 0 && <MisterMarket />}
