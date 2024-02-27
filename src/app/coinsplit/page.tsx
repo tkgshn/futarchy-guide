@@ -130,38 +130,6 @@ const CoinSplit2 = ({ split }: { split?: boolean }) => {
   )
 }
 
-export function Coinsplit({ open }: { open?: boolean }) {
-  //const [open, toggle] = useState(false)
-
-  const peekRef = useSpringRef()
-  const peek = useSpring({
-    ref: peekRef,
-    width: open ? 100 : 0,
-    config: { friction: open ? 10 : undefined },
-  })
-
-  const pookRef = useSpringRef()
-  const pook = useSpring({ ref: pookRef, width: open ? 500 : 210 })
-
-  useChain(open ? [peekRef, pookRef] : [pookRef, peekRef], [0, open ? 0.6 : 0])
-
-  return (
-    <div
-      className="flex flex-row items-center"
-      //onClick={active ? () => toggle(!open) : undefined}
-    >
-      <animated.div style={peek}>
-        <Coin condition="pass" showPrefix={open} />
-      </animated.div>
-      <animated.div style={pook} className="flex flex-row justify-end">
-        <div>
-          <Coin condition="fail" showPrefix={open} />
-        </div>
-      </animated.div>
-    </div>
-  )
-}
-
 export function USDCSplit({ active }: { active?: boolean }) {
   const [open, toggle] = useState(false)
 
