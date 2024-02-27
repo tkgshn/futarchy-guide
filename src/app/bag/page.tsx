@@ -1,5 +1,5 @@
 "use client"
-import { MutableRefObject, ReactNode, useRef, useState } from "react"
+import { MutableRefObject, ReactNode, useState } from "react"
 import { animated, useSpring, useTransition } from "@react-spring/web"
 
 const Emitter = ({
@@ -56,15 +56,14 @@ export const FillableBag = ({
   targetPosition: [targetX, targetY],
   bag,
   thingy,
-  thingies,
+  emitRef,
 }: {
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
   bag: ReactNode
   thingy: ReactNode
-  thingies: number
+  emitRef: MutableRefObject<null | (() => void)>
 }) => {
-  const emitRef = useRef<null | (() => void)>(null)
   const [nummies, setNummies] = useState(0)
 
   const [spring, api] = useSpring(
@@ -105,7 +104,6 @@ export default function Fart() {
           targetPosition={["30%", "25%"]}
           bag={<div className="opacity-10 scale-[10]">🛍️</div>}
           thingy={<div className="">🍬</div>}
-          thingies={5}
         />
       </div>
     </main>

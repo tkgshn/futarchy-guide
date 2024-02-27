@@ -3,7 +3,7 @@ import { COIN_COLOR } from "@/constants"
 import { Coinsplit, USDCSplit } from "../coinsplit/page"
 
 import { useSpring, animated } from "@react-spring/web"
-import { useEffect, useState } from "react"
+import { MutableRefObject, useEffect, useRef, useState } from "react"
 import { DemoZone } from "../track/intro/page"
 import { FillableBag } from "../bag/page"
 
@@ -43,11 +43,15 @@ export function MisterMarket() {
 export function MarketBase({
   left,
   right,
+  buyLeft,
+  leftBalance,
 }: {
   left: React.ReactNode
   right: React.ReactNode
+  buyLeft: MutableRefObject<null | (() => void)>
+  leftBalance: number
 }) {
-  const [balance, setBalance] = useState(4)
+  const balance = leftBalance
   const left1 = useSpring({
     left: balance > 0 ? "50%" : "0%",
     top: balance > 0 ? "0%" : "100%",
@@ -101,6 +105,7 @@ export function MarketBase({
       </div>
       <div>
         <FillableBag
+          emitRef={buyLeft}
           bagPosition={["100%", "100%"]}
           targetPosition={["50%", "0%"]}
           bag={<div className="scale-[10] ">🛍️</div>}
@@ -109,18 +114,77 @@ export function MarketBase({
               <USDCSplit active={false} />
             </div>
           }
-          thingies={5}
         />
       </div>
     </>
   )
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+const LEFT_BALANCE_EACH_STEP = {
+  0: 4,
+  1: 4,
+}
+
 export function Market({ step }: { step: number }) {
+  const buyLeft = useRef<null | (() => void)>(null)
+
+  const [leftBalance, setLeftBalance] = useState(4)
+
+  const prevStep = useRef(step)
+  useEffect(() => {
+    const buyStuff = async () => {
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(100)
+      buyLeft.current?.()
+      await sleep(400)
+
+      setLeftBalance(3)
+      await sleep(500)
+      setLeftBalance(2)
+    }
+
+    if (prevStep.current < 3 && step === 3) {
+      buyStuff()
+    }
+    prevStep.current = step
+  }, [step])
+
   return (
     <div className="flex flex-col items-center justify-center select-none">
       {step > 1 && (
         <MarketBase
+          leftBalance={leftBalance}
+          buyLeft={buyLeft}
           left={<Coinsplit active={false} />}
           right={<USDCSplit active={false} />}
         />

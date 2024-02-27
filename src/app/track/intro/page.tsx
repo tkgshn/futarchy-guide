@@ -212,8 +212,8 @@ const Block = ({
 
 export function DemoZone({ children }: { children?: ReactNode }) {
   return (
-    <div className="w-full flex-1 border border-dashed border-white flex flex-col py-12 justify-center items-center">
-      <div className="w-full h-full border border-dashed border-white flex-1 max-w-2xl max-h-[350px] relative">
+    <div className="w-full flex-1 flex flex-col py-12 justify-center items-center">
+      <div className="w-full h-full flex-1 max-w-2xl max-h-[350px] relative">
         {children}
       </div>
     </div>
@@ -294,6 +294,8 @@ export default function Intro() {
               500,
               () => setMarketStep(Math.max(marketStep, 2)),
               "You portion out your budget and buy a few META. ",
+              500,
+              () => setMarketStep(Math.max(marketStep, 3)),
             ],
             ["."],
             ["But that was a mistake. MetaDAO is a futarchy. "],

@@ -63,7 +63,7 @@ export function Coin({
         style={{ mask: "url(#mask)" }}
       />
 
-      <text
+      {/* <text
         x="50%"
         y="225"
         textAnchor="middle"
@@ -75,7 +75,7 @@ export function Coin({
         style={{ fontSize: "20px" }}
       >
         1 {showPrefix ? (condition === "pass" ? "p" : "f") : ""}META
-      </text>
+      </text> */}
     </svg>
   )
 }
@@ -215,7 +215,7 @@ export function USDCSplit({ active }: { active?: boolean }) {
               r="100"
               style={{ mask: `url(#${MASK_ID})` }}
             />
-            <text
+            {/* <text
               x="50%"
               y="225"
               textAnchor="middle"
@@ -223,7 +223,7 @@ export function USDCSplit({ active }: { active?: boolean }) {
               style={{ fontSize: "20px" }}
             >
               1 {open ? "f" : ""}USDC
-            </text>
+            </text> */}
           </svg>
         </div>
       </animated.div>
