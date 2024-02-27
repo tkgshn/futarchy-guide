@@ -4,6 +4,7 @@ import { animated, useSpring } from "@react-spring/web"
 import { TypeAnimation } from "react-type-animation"
 import { useParams, useRouter } from "next/navigation"
 import useMeasure from "react-use-measure"
+import { Market } from "@/app/market/page"
 
 const Enter = ({
   isVisible,
@@ -68,6 +69,8 @@ const BetterTypeAnimation = (
   const finalText = props.sequence.findLast(
     (x) => typeof x === "string"
   ) as string
+
+  // trigger all callbacks if fastforwarded?
 
   return (
     <animated.div className="relative" style={spring}>
@@ -210,7 +213,7 @@ const Block = ({
 export function DemoZone({ children }: { children?: ReactNode }) {
   return (
     <div className="w-full flex-1 border border-dashed border-white flex flex-col py-12 justify-center items-center">
-      <div className="w-full h-full border border-dashed border-white flex-1 max-w-2xl max-h-[672px]">
+      <div className="w-full h-full border border-dashed border-white flex-1 max-w-2xl max-h-[350px] relative">
         {children}
       </div>
     </div>
@@ -238,6 +241,8 @@ export default function Intro() {
     //}
   }
 
+  const [marketStep, setMarketStep] = useState(0)
+
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-start p-24"
@@ -262,11 +267,20 @@ export default function Intro() {
               500,
               "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
             ],
-            ["That's where the market comes in."],
+            [
+              "That's where the market comes in.",
+              250,
+              "That's where the market comes in..",
+              250,
+              "That's where the market comes in...",
+              500,
+              () => setMarketStep(Math.max(marketStep, 1)),
+              "That's where the market comes in.",
+            ],
             [
               "You check out prices.",
               500,
-              "You check out prices. 1 META = 49,000 USDC.",
+              "You check out prices. 1 META = 49,000 USDC.", // TODO animate this
             ],
             [
               "It’s low. ",
@@ -275,14 +289,20 @@ export default function Intro() {
               250,
               "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early. ",
             ],
-            ["."],
-            ["You portion out your budget and buy a few META. "],
+            [
+              "You portion out your budget",
+              500,
+              () => setMarketStep(Math.max(marketStep, 2)),
+              "You portion out your budget and buy a few META. ",
+            ],
             ["."],
             ["But that was a mistake. MetaDAO is a futarchy. "],
           ]}
         />
       </div>
-      <DemoZone></DemoZone>
+      <DemoZone>
+        <Market step={marketStep} />
+      </DemoZone>
       {/* <button
         className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
           waiting ? "opacity-50" : ""
