@@ -5,6 +5,28 @@ import { Coinsplit, USDCSplit } from "../coinsplit/page"
 import { useSpring, animated } from "@react-spring/web"
 import { useState } from "react"
 
+export function MisterMarket() {
+  return (
+    <div
+      className="bg-zinc-600 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center"
+      style={{
+        position: "absolute",
+        top: "0",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "4px dashed",
+        width: "250px",
+        height: "250px",
+      }}
+    >
+      <div className="text-5xl mb-3">the market</div>
+      <div>
+        1 <span className={`text-[${COIN_COLOR}]`}>META</span> :: 49,000 USDC
+      </div>
+    </div>
+  )
+}
+
 export function Market({
   left,
   right,
@@ -120,23 +142,7 @@ export function Market({
           </animated.div>
         ))}
       </div>
-      <div
-        className="bg-zinc-600 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center"
-        style={{
-          position: "absolute",
-          top: "0",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          border: "4px dashed",
-          width: "250px",
-          height: "250px",
-        }}
-      >
-        <div className="text-5xl mb-3">the market</div>
-        <div>
-          1 <span className={`text-[${COIN_COLOR}]`}>META</span> :: 49,000 USDC
-        </div>
-      </div>
+      <MisterMarket />
     </div>
   )
 }

@@ -5,6 +5,11 @@ import { useSpring, animated } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react"
 import { useState } from "react"
 
+// WHAT IS THIS?
+// This is me experimenting with drag and drop
+// I actually did get dragging working and then I learned online hacks would be needed for drop
+// so I gave up.
+
 export function Market({
   left,
   right,

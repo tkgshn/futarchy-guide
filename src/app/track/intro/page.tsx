@@ -206,6 +206,17 @@ const Block = ({
     </animated.div>
   )
 }
+
+export function DemoZone({ children }: { children?: ReactNode }) {
+  return (
+    <div className="w-full flex-1 border border-dashed border-white flex flex-col py-12 justify-center items-center">
+      <div className="w-full h-full border border-dashed border-white flex-1 max-w-2xl max-h-[672px]">
+        {children}
+      </div>
+    </div>
+  )
+}
+
 export default function Intro() {
   const [read, setRead] = useState(0)
 
@@ -236,7 +247,7 @@ export default function Intro() {
         <Coinsplit />
       </Enter> */}
 
-      <div className="mb-4 h-[40vh] w-full flex flex-col gap-4 overflow-scroll justify-end">
+      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-scroll justify-end">
         <Block1
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -271,6 +282,7 @@ export default function Intro() {
           ]}
         />
       </div>
+      <DemoZone></DemoZone>
       {/* <button
         className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
           waiting ? "opacity-50" : ""
