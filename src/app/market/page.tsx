@@ -1,5 +1,5 @@
 "use client"
-import { COIN_COLOR } from "@/constants"
+import { COIN_COLOR, USDC_COLOR } from "@/constants"
 import { Coinsplit, USDCSplit } from "../coinsplit/page"
 
 import { useSpring, animated } from "@react-spring/web"
@@ -20,7 +20,7 @@ export function MisterMarket() {
   return (
     <animated.div style={spring}>
       <div
-        className="bg-zinc-600 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center select-none"
+        className="bg-zinc-700 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center select-none"
         style={{
           position: "absolute",
           top: "0",
@@ -33,7 +33,8 @@ export function MisterMarket() {
       >
         <div className="text-5xl mb-3">the market</div>
         <div>
-          1 <span className={`text-[${COIN_COLOR}]`}>META</span> :: 49,000 USDC
+          1 <span style={{ color: COIN_COLOR }}>META</span> :: 49,000{" "}
+          <span style={{ color: USDC_COLOR }}>USDC</span>
         </div>
       </div>
     </animated.div>
@@ -97,7 +98,7 @@ export function MarketBase({
             key={index}
             className="absolute translate-x-[-50%] translate-y-[-50%]"
             style={spring}
-            onClick={() => setBalance((prev) => prev + 1)}
+            //onClick={() => setBalance((prev) => prev + 1)}
           >
             {left}
           </animated.div>
