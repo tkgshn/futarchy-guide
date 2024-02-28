@@ -263,7 +263,12 @@ export default function Fart() {
       onClick={() => toggle(!open)}
     >
       <DemoZone>
-        <Coinsplit split={open} />
+        <Splitter
+          doSproingy
+          split={open}
+          left={<Coin condition="pass" label={open ? "1 pMETA" : "1 META"} />}
+          right={<Coin condition="fail" label={open ? "1 fMETA" : "1 META"} />}
+        />
       </DemoZone>
     </main>
   )
