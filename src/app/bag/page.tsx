@@ -57,12 +57,14 @@ export const FillableBag = ({
   bag,
   thingy,
   emitRef,
+  emitRefSell,
 }: {
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
   bag: ReactNode
   thingy: ReactNode
   emitRef: MutableRefObject<null | (() => void)>
+  emitRefSell: MutableRefObject<null | (() => void)>
 }) => {
   const [nummies, setNummies] = useState(0)
 
@@ -81,6 +83,12 @@ export const FillableBag = ({
         target={[targetX, targetY]}
         particle={thingy}
       />
+      <Emitter
+        emitRef={emitRefSell}
+        source={[targetX, targetY]}
+        target={[bagX, bagY]}
+        particle={thingy}
+      />
       <animated.div
         className={"absolute translate-x-[-50%] translate-y-[-50%]"}
         style={spring}
@@ -96,12 +104,12 @@ export default function Fart() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24 relative">
       <div>
-        <FillableBag
+        {/* <FillableBag
           bagPosition={["50%", "50%"]}
           targetPosition={["30%", "25%"]}
           bag={<div className="opacity-10 scale-[10]">🛍️</div>}
           thingy={<div className="">🍬</div>}
-        />
+        /> */}
       </div>
     </main>
   )

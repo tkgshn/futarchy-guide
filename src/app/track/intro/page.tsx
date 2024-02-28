@@ -292,6 +292,7 @@ export default function Intro() {
             ],
             [
               "Woah woah, slow down. MetaDAO is a *futarchy*. Sure, you can trade this news on the spot market, but there’s a *much better* way. Go ahead and undo that purchase. You’ll thank me later.",
+              () => setMarketStep(Math.max(marketStep, 4)),
             ],
             /*<BetterTypeAnimation
               key="wumbo1"
@@ -305,11 +306,11 @@ export default function Intro() {
       <DemoZone>
         <Market
           amountRight={
-            marketStep < 3
+            marketStep !== 3
               ? STARTING_USDC_BALANCE
               : STARTING_USDC_BALANCE - 49000 * 2
           }
-          amountLeft={marketStep < 3 ? 0 : 2}
+          amountLeft={marketStep !== 3 ? 0 : 2}
           marketPosition={["50%", "0%"]}
           bagPosition={["100%", "100%"]}
           showMarket={marketStep > 0}

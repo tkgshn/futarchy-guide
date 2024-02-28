@@ -106,6 +106,7 @@ export function MarketBase({
   left,
   right,
   buyLeft,
+  sellLeft,
   leftBalance, // this is a lie. its actually like 4 minus this number
   bagPosition,
   targetPosition,
@@ -113,6 +114,7 @@ export function MarketBase({
   left: React.ReactNode
   right: React.ReactNode
   buyLeft: MutableRefObject<null | (() => void)>
+  sellLeft: MutableRefObject<null | (() => void)>
   leftBalance: number
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
@@ -137,6 +139,7 @@ export function MarketBase({
       <div>
         <FillableBag
           emitRef={buyLeft}
+          emitRefSell={sellLeft}
           bagPosition={bagPosition}
           targetPosition={targetPosition}
           bag={right}
@@ -177,11 +180,13 @@ export function Market({
   showCoins: boolean
 }) {
   const buyLeft = useRef<null | (() => void)>(null)
+  const sellLeft = useRef<null | (() => void)>(null)
 
   const prevAmountRight = useRef(amountRight)
   const prevAmountLeft = useRef(amountLeft)
 
   const [awaitedLeftAmount, setAwaitedLeftBalance] = useState(amountLeft)
+  const [awaitedRightAmount, setAwaitedRightBalance] = useState(amountRight)
 
   useEffect(() => {
     const diffRight = amountRight - prevAmountRight.current
@@ -192,22 +197,31 @@ export function Market({
     const coinsBought2 = amountLeft - prevAmountLeft.current
 
     const buyStuff = async () => {
-      for (let i = 0; i < actionCount; i++) {
-        if (actionType === "buyLeft") {
+      if (actionType === "buyLeft") {
+        setAwaitedRightBalance(amountRight)
+        for (let i = 0; i < actionCount; i++) {
           buyLeft.current?.()
+          await sleep(ANIMATION_DURATION / actionCount)
         }
-        await sleep(ANIMATION_DURATION / actionCount)
       }
 
-      for (let i = 0; i < coinsBought2; i++) {
-        await sleep(400)
-
+      for (let a = 0; a < Math.abs(coinsBought2); a++) {
+        await sleep(200)
         setAwaitedLeftBalance(
           (prev) => prev + coinsBought2 / Math.abs(coinsBought2)
         )
+        await sleep(200)
       }
 
-      setAwaitedLeftBalance(amountLeft)
+      if (actionType === "sellLeft") {
+        setAwaitedRightBalance(amountRight)
+        for (let b = 0; b < actionCount; b++) {
+          await sleep(ANIMATION_DURATION / actionCount)
+          sellLeft.current?.()
+        }
+      }
+
+      setAwaitedLeftBalance(amountLeft) // just to avoid race conditions.
     }
     buyStuff()
     prevAmountRight.current = amountRight
@@ -222,8 +236,9 @@ export function Market({
           targetPosition={marketPosition}
           leftBalance={awaitedLeftAmount}
           buyLeft={buyLeft}
+          sellLeft={sellLeft}
           left={<Coinsplit />}
-          right={<USDCBag amount={amountRight} />}
+          right={<USDCBag amount={awaitedRightAmount} />}
         />
       )}
       {showMarket && <MisterMarket />}
