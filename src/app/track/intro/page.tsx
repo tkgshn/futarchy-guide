@@ -292,14 +292,12 @@ export default function Intro() {
             [
               "Woah woah, slow down. MetaDAO is a *futarchy*. Sure, you can trade this news on the spot market, but there’s a *much better* way. Go ahead and undo that purchase. You’ll thank me later.",
             ],
-            {
-              /* <BetterTypeAnimation
+            /*<BetterTypeAnimation
               key="wumbo1"
               doneWaiting={() => setWaiting(false)}
               sequence={["a"]}
               fastForward={read - 3 > 8}
-            />, */
-            },
+            />,*/
           ]}
         />
       </div>
