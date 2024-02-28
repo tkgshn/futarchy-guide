@@ -1,6 +1,6 @@
 "use client"
 import { useState } from "react"
-import { Block } from "../intro/page"
+import { BetterTypeAnimation, Block } from "../intro/page"
 import { Splitter, USDCoin } from "@/app/coinsplit/page"
 import { AnimatedEnter, Market } from "@/app/market/page"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
@@ -38,7 +38,7 @@ export default function Chapter2() {
       className="flex min-h-screen flex-col items-center justify-start p-24"
       onClick={nextChat}
     >
-      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-scroll justify-end max-w-3xl">
+      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-y-scroll justify-end max-w-3xl">
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -80,7 +80,27 @@ export default function Chapter2() {
               500,
               "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, and but not trade your fUSDC.",
             ],
-            [],
+            [
+              "Perfect.",
+              500,
+              "Perfect. Now you've invested like a proper futarchic cyberdenizen.",
+              500,
+              `Perfect. Now you've invested like a proper futarchic cyberdenizen. If the proposal passes, you'll have 2 META and $${
+                STARTING_USDC_BALANCE - PMETA_PRICE * 2
+              } USDC. If the proposal fails, you'll have $${STARTING_USDC_BALANCE} USDC, just as you started.`,
+            ],
+            <span key="great" className="text-right text-yellow-400">
+              <BetterTypeAnimation
+                doneWaiting={() => setWaiting(false)}
+                sequence={["Great. When will the DAO vote on the proposal?"]}
+                fastForward={read - 3 > 8}
+              />
+            </span>,
+            ["Right. I forgot. You're clueless."],
+            [
+              "Because the pass market and fail market are separate, their prices can diverge. Each market shows us what traders believe META is worth if the proposal passes versus if it fails.",
+            ],
+            ["In this case, pMETA is trading below "],
           ]}
         />
       </div>
@@ -113,21 +133,22 @@ export default function Chapter2() {
                       <Market
                         showCoins={true}
                         showMarket={read > showMarketsAfter}
-                        showLeftCoins={false}
+                        showLeftCoins={read > buypMetaAfter}
                         bagPosition={
                           read > showMarketsAfter
                             ? ["100%", "100%"]
                             : ["50%", "50%"]
                         }
                         marketPosition={["50%", "0%"]}
-                        amountLeft={read < buypMetaAfter ? 0 : 2}
+                        amountLeft={read <= buypMetaAfter ? 0 : 2}
                         amountRight={
-                          read < buypMetaAfter
+                          read <= buypMetaAfter
                             ? STARTING_USDC_BALANCE
                             : STARTING_USDC_BALANCE - PMETA_PRICE * 2
                         }
                         condition="pass"
                         rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                        price={PMETA_PRICE.toLocaleString()}
                       />
                     </div>
                   </AnimatedEnter>
@@ -159,6 +180,7 @@ export default function Chapter2() {
                           amountRight={STARTING_USDC_BALANCE}
                           condition="fail"
                           rightLabel={!combineCoins ? "fUSDC" : "USDC"}
+                          price={"49,003"}
                         />
                       </div>
                     </AnimatedEnter>

@@ -22,7 +22,13 @@ export function AnimatedEnter({ children }: { children: React.ReactNode }) {
   return <animated.div style={spring}>{children}</animated.div>
 }
 
-export function MisterMarket({ condition }: { condition?: "pass" | "fail" }) {
+export function MisterMarket({
+  condition,
+  price,
+}: {
+  condition?: "pass" | "fail"
+  price?: string
+}) {
   const spring = useSpringEnter()
   return (
     <animated.div style={spring}>
@@ -70,7 +76,7 @@ export function MisterMarket({ condition }: { condition?: "pass" | "fail" }) {
             }
             META
           </span>{" "}
-          :: 49,000{" "}
+          :: {price ?? "49,000"}{" "}
           <span
             style={{ color: condition === undefined ? USDC_COLOR : undefined }}
           >
@@ -216,6 +222,7 @@ export function Market({
   showLeftCoins,
   condition,
   rightLabel,
+  price,
 }: {
   bagPosition: [x: string, y: string]
   marketPosition: [x: string, y: string]
@@ -226,6 +233,7 @@ export function Market({
   showLeftCoins: boolean
   condition?: "pass" | "fail"
   rightLabel?: string
+  price?: string
 }) {
   const buyLeft = useRef<null | (() => void)>(null)
   const sellLeft = useRef<null | (() => void)>(null)
@@ -302,7 +310,7 @@ export function Market({
           }
         />
       )}
-      {showMarket && <MisterMarket condition={condition} />}
+      {showMarket && <MisterMarket condition={condition} price={price} />}
     </>
   )
 }

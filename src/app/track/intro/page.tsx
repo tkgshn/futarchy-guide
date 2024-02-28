@@ -11,9 +11,8 @@ import { STARTING_USDC_BALANCE } from "@/constants"
 const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
   speed: 85,
-  wrapper: "div",
   cursor: false,
-  className: "text-2xl whitespace-pre-line text-left w-full",
+  className: "text-2xl whitespace-pre-line w-full",
 } as const
 
 export const useHash = () => {
