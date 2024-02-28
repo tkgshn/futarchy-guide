@@ -26,7 +26,7 @@ export default function Chapter2() {
   const beginTradingDemoAfter = 10
   const splitBagAFter = 11
   const showMarketsAfter = 12
-  const buypMetaAfter = 14
+  const buypMetaAfter = 13
 
   //const recombineCoinsAfter = 9
   const showCoinAfter = 99
