@@ -1,6 +1,6 @@
 "use client"
 import { COIN_COLOR, STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
-import { Coinsplit, USDCSplit } from "../coinsplit/page"
+import { Coin, Coinsplit, USDCSplit } from "../coinsplit/page"
 
 import { useSpring, animated } from "@react-spring/web"
 import { MutableRefObject, useEffect, useRef, useState } from "react"
@@ -171,6 +171,9 @@ export function Market({
   amountLeft,
   showMarket,
   showCoins,
+  showLeftCoins,
+  condition,
+  rightLabel,
 }: {
   bagPosition: [x: string, y: string]
   marketPosition: [x: string, y: string]
@@ -178,6 +181,9 @@ export function Market({
   amountLeft: number
   showMarket: boolean
   showCoins: boolean
+  showLeftCoins: boolean
+  condition?: "pass" | "fail"
+  rightLabel?: string
 }) {
   const buyLeft = useRef<null | (() => void)>(null)
   const sellLeft = useRef<null | (() => void)>(null)
@@ -237,8 +243,21 @@ export function Market({
           leftBalance={awaitedLeftAmount}
           buyLeft={buyLeft}
           sellLeft={sellLeft}
-          left={<Coinsplit />}
-          right={<USDCBag amount={awaitedRightAmount} />}
+          left={
+            showLeftCoins &&
+            (condition === undefined ? (
+              <Coinsplit />
+            ) : (
+              <Coin condition={condition} />
+            ))
+          }
+          right={
+            <USDCBag
+              amount={awaitedRightAmount}
+              condition={condition}
+              label={rightLabel}
+            />
+          }
         />
       )}
       {showMarket && <MisterMarket />}
@@ -268,6 +287,7 @@ export default function Home() {
           bagPosition={["100%", "100%"]}
           amountLeft={amountLeft}
           amountRight={amountRight}
+          showLeftCoins
         />
       </DemoZone>
     </main>

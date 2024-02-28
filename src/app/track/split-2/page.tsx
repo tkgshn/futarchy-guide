@@ -1,8 +1,9 @@
 "use client"
 import { useState } from "react"
-import { Block, DemoZone } from "../intro/page"
+import { Block } from "../intro/page"
 import { Splitter, USDCoin } from "@/app/coinsplit/page"
-import { AnimatedEnter } from "@/app/market/page"
+import { AnimatedEnter, Market } from "@/app/market/page"
+import { STARTING_USDC_BALANCE } from "@/constants"
 
 export default function Chapter2() {
   const [read, setRead] = useState(0)
@@ -16,15 +17,20 @@ export default function Chapter2() {
     //}
   }
 
-  const showPassCoinAfter = 3
+  const showPassCoinAfter = 4
   const showFailCoinAfter = 6
   const demonstrateMergeAfter = 8
-  const recombineCoinsAfter = 9
+  const endCoinDemoAfter = 9
+
+  const beginTradingDemoAfter = 10
+  const splitBagAFter = 11
+  const showMarketsAfter = 12
+
+  //const recombineCoinsAfter = 9
   const showCoinAfter = 99
   const splitCoinAfter = 99
 
-  const combineCoins =
-    read > demonstrateMergeAfter && read < recombineCoinsAfter
+  const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
   return (
     <main
@@ -62,49 +68,97 @@ export default function Chapter2() {
             ],
             ["Thus, having one of each is the same as just having 1 USDC."],
             [
-              "That's not the interesting part. The interesting part is that you can *trade* each of them separately, for conditional meta.",
+              "That's not the interesting part. The interesting part is that you can *trade* each of them separately, for conditional META.",
             ], // todo timing
-            ["Let's split your USDC bag now."],
+            ["Get out your USDC again, let's split it."], //todo timing
+            [
+              "As I mentioned, you can trade your pUSDC and fUSDC separately. There's a market for each.",
+            ], //todo timing
           ]}
         />
       </div>
-      <DemoZone>
-        {/*  {read > showPassCoinAfter && (
+
+      <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
+        <div
+          className={
+            "w-full h-full flex-1 max-h-[350px] relative scale-90" +
+            " " +
+            (read < beginTradingDemoAfter ? "max-w-[404px]" : "max-w-[808px]")
+          }
+        >
+          {/*  {read > showPassCoinAfter && (
           <Coin condition="pass" label={"1 pMETA"} />
         )} */}
-        {read > showPassCoinAfter && (
-          <Splitter
-            split={!combineCoins && read > showFailCoinAfter}
-            left={
-              <AnimatedEnter>
-                <USDCoin
-                  condition="pass"
-                  label={!combineCoins ? "1 pUSDC" : "1 USDC"}
-                />
-              </AnimatedEnter>
-            }
-            right={
-              read > showFailCoinAfter ? (
-                <AnimatedEnter>
-                  <USDCoin
-                    condition="fail"
-                    label={!combineCoins ? "1 fUSDC" : "1 USDC"}
-                  />
-                </AnimatedEnter>
-              ) : null
-            }
-          />
-        )}
-      </DemoZone>
-      {/* <button
-        className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${
-          waiting ? "opacity-50" : ""
-        }`}
-        onClick={advance}
-        disabled={waiting}
-      >
-        {waiting ? ". . ." : "gimme"}
-      </button> */}
+          {read > showPassCoinAfter && (
+            <Splitter
+              split={!combineCoins && read > showFailCoinAfter}
+              left={
+                read <= endCoinDemoAfter ? (
+                  <AnimatedEnter key="conditional tokens">
+                    <USDCoin
+                      condition="pass"
+                      label={!combineCoins ? "1 pUSDC" : "1 USDC"}
+                    />
+                  </AnimatedEnter>
+                ) : read <= beginTradingDemoAfter ? null : (
+                  <AnimatedEnter key="trading">
+                    <div className="relative w-[404px] h-[300px] scale-75">
+                      <Market
+                        showCoins={true}
+                        showMarket={read > showMarketsAfter}
+                        showLeftCoins={false}
+                        bagPosition={
+                          read > showMarketsAfter
+                            ? ["100%", "100%"]
+                            : ["50%", "50%"]
+                        }
+                        marketPosition={["50%", "0%"]}
+                        amountLeft={0}
+                        amountRight={STARTING_USDC_BALANCE}
+                        condition="pass"
+                        rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                      />
+                    </div>
+                  </AnimatedEnter>
+                )
+              }
+              right={
+                read > showFailCoinAfter ? (
+                  read <= endCoinDemoAfter ? (
+                    <AnimatedEnter key="conditional tokens">
+                      <USDCoin
+                        condition="fail"
+                        label={!combineCoins ? "1 fUSDC" : "1 USDC"}
+                      />
+                    </AnimatedEnter>
+                  ) : read <= beginTradingDemoAfter ? null : (
+                    <AnimatedEnter key="trading">
+                      <div className="relative w-[404px] h-[300px] scale-75">
+                        <Market
+                          showCoins={true}
+                          showMarket={read > showMarketsAfter}
+                          showLeftCoins={false}
+                          bagPosition={
+                            read > showMarketsAfter
+                              ? ["100%", "100%"]
+                              : ["50%", "50%"]
+                          }
+                          marketPosition={["50%", "0%"]}
+                          amountLeft={0}
+                          amountRight={STARTING_USDC_BALANCE}
+                          condition="fail"
+                          rightLabel={!combineCoins ? "fUSDC" : "USDC"}
+                        />
+                      </div>
+                    </AnimatedEnter>
+                  )
+                ) : null
+              }
+            />
+          )}
+          {}
+        </div>
+      </div>
     </main>
   )
 }

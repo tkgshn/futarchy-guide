@@ -305,6 +305,7 @@ export default function Intro() {
       </div>
       <DemoZone>
         <Market
+          showLeftCoins={marketStep === 3}
           amountRight={
             marketStep !== 3
               ? STARTING_USDC_BALANCE

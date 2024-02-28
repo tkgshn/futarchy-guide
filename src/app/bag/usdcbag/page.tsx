@@ -19,7 +19,15 @@ const radiusFromArea = (area: number) => Math.sqrt(area / Math.PI)
 const BIGGLIEST_AREA = 125 * 125 * Math.PI
 const SMOLLEST_AREA = 75 * 75 * Math.PI
 
-export function USDCBag({ amount }: { amount: number }) {
+export function USDCBag({
+  amount,
+  condition,
+  label,
+}: {
+  amount: number
+  condition?: "pass" | "fail"
+  label?: string
+}) {
   const spring = useSpringEnter()
 
   const progress =
@@ -34,10 +42,23 @@ export function USDCBag({ amount }: { amount: number }) {
   return (
     <animated.div style={spring}>
       <animated.div
-        className="rounded-full border-white flex flex-col justify-center items-center font-mono text-center select-none border-4"
+        className={
+          "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
+          " " +
+          (condition === undefined
+            ? "border-white"
+            : condition === "pass"
+            ? "border-lime-100"
+            : "border-red-100")
+        }
         style={{
           position: "absolute",
-          background: USDC_COLOR,
+          background:
+            condition === undefined
+              ? USDC_COLOR
+              : condition === "pass"
+              ? "#0891b2"
+              : "#7c3aed",
           top: "0",
           left: "50%",
           transform: "translate(-50%, -50%)",
@@ -48,6 +69,7 @@ export function USDCBag({ amount }: { amount: number }) {
         <div className="text-5xl">
           $<animated.span>{amountSpring.to((x) => x.toFixed(0))}</animated.span>
         </div>
+        <div className="flex-0 h-0 text-lg">{label}</div>
       </animated.div>
     </animated.div>
   )
