@@ -3,7 +3,7 @@ import { useState } from "react"
 import { Block } from "../intro/page"
 import { Splitter, USDCoin } from "@/app/coinsplit/page"
 import { AnimatedEnter, Market } from "@/app/market/page"
-import { STARTING_USDC_BALANCE } from "@/constants"
+import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 
 export default function Chapter2() {
   const [read, setRead] = useState(0)
@@ -25,6 +25,7 @@ export default function Chapter2() {
   const beginTradingDemoAfter = 10
   const splitBagAFter = 11
   const showMarketsAfter = 12
+  const buypMetaAfter = 14
 
   //const recombineCoinsAfter = 9
   const showCoinAfter = 99
@@ -37,7 +38,7 @@ export default function Chapter2() {
       className="flex min-h-screen flex-col items-center justify-start p-24"
       onClick={nextChat}
     >
-      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-scroll justify-end">
+      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-scroll justify-end max-w-3xl">
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -74,6 +75,12 @@ export default function Chapter2() {
             [
               "As I mentioned, you can trade your pUSDC and fUSDC separately. There's a market for each.",
             ], //todo timing
+            [
+              "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails.",
+              500,
+              "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, and but not trade your fUSDC.",
+            ],
+            [],
           ]}
         />
       </div>
@@ -113,8 +120,12 @@ export default function Chapter2() {
                             : ["50%", "50%"]
                         }
                         marketPosition={["50%", "0%"]}
-                        amountLeft={0}
-                        amountRight={STARTING_USDC_BALANCE}
+                        amountLeft={read < buypMetaAfter ? 0 : 2}
+                        amountRight={
+                          read < buypMetaAfter
+                            ? STARTING_USDC_BALANCE
+                            : STARTING_USDC_BALANCE - PMETA_PRICE * 2
+                        }
                         condition="pass"
                         rightLabel={!combineCoins ? "pUSDC" : "USDC"}
                       />
