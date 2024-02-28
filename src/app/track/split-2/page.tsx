@@ -48,14 +48,9 @@ export default function Chapter2() {
               "What you're looking at now is 1 META, conditional upon passing the hypertronics proposal. For short, let's call it \"pass META\", or pMETA.", //insert gag about renaming the token.
             ],
             [
-              "It functions like any other token: \n   you can buy it, sell it, or trade it. But it has one special property: it's only worth something if the proposal passes.",
+              "It functions like any other token: \n   you can buy it, sell it, or trade it. ",
             ],
-            [
-              "Likewise, it has a sister token: fMETA. This fMETA will only be worth something if the proposal fails.",
-            ],
-            [
-              "The way this works is simple: if the proposal passes, the pMETA will get redeemed for regular META, and the fMETA will get burned",
-            ],
+            ["Likewise, it has a sister token: fMETA. "],
           ]}
         />
       </div>

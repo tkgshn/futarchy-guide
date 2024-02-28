@@ -76,6 +76,79 @@ export function Coin({
   )
 }
 
+export function USDCoin({
+  condition,
+  label,
+}: {
+  condition: "pass" | "fail"
+  label?: string
+}) {
+  const radius = 90
+  const circumference = 2 * Math.PI * radius
+  const dashCount = 40 // Choose the number of dashes you want
+  const dasharray = circumference / dashCount
+
+  return (
+    <svg
+      className="mix-blend-lighten"
+      viewBox="0 0 210 240"
+      style={{ width: "210px", height: "240px" }}
+    >
+      <mask id="mask">
+        <rect width="210" height="240" fill="white" />
+        <circle
+          cx="105"
+          cy="105"
+          r={radius}
+          stroke="black"
+          fill="none"
+          strokeWidth="5"
+          strokeDasharray={`${dasharray}`}
+        />
+        <text
+          x="50%"
+          y="45%"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          fontSize="120"
+          fontWeight="bold"
+          fontFamily="monospace"
+          fill="black"
+        >
+          $
+        </text>
+      </mask>
+      <circle
+        className={condition === "pass" ? "fill-lime-100" : "fill-red-100"}
+        cx="105"
+        cy="105"
+        r="104"
+        //style={{ mixBlendMode: "multiply", mask: "url(#mask)" }}
+      />
+      <circle
+        className={condition === "pass" ? "fill-cyan-600" : "fill-violet-600"}
+        cx="105"
+        cy="105"
+        r="100"
+        style={{ mask: "url(#mask)" }}
+      />
+
+      <text
+        x="50%"
+        y="230"
+        textAnchor="middle"
+        className={
+          (condition === "pass" ? "fill-cyan-600 " : "fill-violet-600 ") +
+          "font-mono"
+        }
+        style={{ fontSize: "20px" }}
+      >
+        {label}
+      </text>
+    </svg>
+  )
+}
+
 export function Splitter({
   split,
   left,
