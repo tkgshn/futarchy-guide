@@ -5,6 +5,7 @@ import { TypeAnimation } from "react-type-animation"
 import { useParams, useRouter } from "next/navigation"
 import useMeasure from "react-use-measure"
 import { Market } from "@/app/market/page"
+import React from "react"
 
 const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
@@ -125,9 +126,9 @@ const Block1 = ({
           doneWaiting={doneWaiting}
           fastForward={read > 1}
           sequence={[
-            "You know tractor beams.",
+            "You know tractor beams like the back of your hand.",
             500,
-            "You know tractor beams. The biggest beam corps from Earth say hypertronic isn’t worth the plutonium, they say it barely moves the needle.",
+            "You know tractor beams like the back of your hand. The biggest beam corps from Earth say hypertronic isn’t worth the plutonium, they say it barely moves the needle.",
           ]}
         />
       )}
@@ -153,6 +154,11 @@ const Block1 = ({
   )
 }
 
+type BlockSequence = (
+  | Parameters<typeof TypeAnimation>[0]["sequence"]
+  | ReactNode
+)[]
+
 export const Block = ({
   read,
   doneWaiting,
@@ -162,7 +168,7 @@ export const Block = ({
   read: number
   doneWaiting: () => void
   fade: boolean
-  sequences: Parameters<typeof TypeAnimation>[0]["sequence"][]
+  sequences: BlockSequence
 }) => {
   const spring = useSpring({
     from: { opacity: 1 },
@@ -176,7 +182,8 @@ export const Block = ({
     <animated.div className="flex flex-col" style={spring}>
       {sequences.map(
         (sequence, index) =>
-          read > index && (
+          read > index &&
+          (Array.isArray(sequence) ? (
             <BetterTypeAnimation
               key={
                 index + sequence.filter((x) => typeof x === "string").join("")
@@ -185,7 +192,9 @@ export const Block = ({
               sequence={sequence}
               fastForward={read > index + 1}
             />
-          )
+          ) : (
+            <React.Fragment key={index}>{sequence}</React.Fragment>
+          ))
       )}
     </animated.div>
   )
@@ -266,20 +275,31 @@ export default function Intro() {
             [
               "It’s low. ",
               250,
-              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.  ",
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.",
               250,
-              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early. ",
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early.",
             ],
             [
               "You portion out your budget",
               500,
               () => setMarketStep(Math.max(marketStep, 2)),
+              1000,
+
               "You portion out your budget and buy a few META. ",
               500,
               () => setMarketStep(Math.max(marketStep, 3)),
             ],
-            ["."],
-            ["But that was a mistake. MetaDAO is a futarchy. "],
+            [
+              "Woah woah, slow down. MetaDAO is a *futarchy*. Sure, you can trade this news on the spot market, but there’s a *much better* way. Go ahead and undo that purchase. You’ll thank me later.",
+            ],
+            {
+              /* <BetterTypeAnimation
+              key="wumbo1"
+              doneWaiting={() => setWaiting(false)}
+              sequence={["a"]}
+              fastForward={read - 3 > 8}
+            />, */
+            },
           ]}
         />
       </div>
