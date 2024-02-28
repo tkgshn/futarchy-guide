@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation"
 import useMeasure from "react-use-measure"
 import { Market } from "@/app/market/page"
 import React from "react"
+import { STARTING_USDC_BALANCE } from "@/constants"
 
 const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
@@ -302,7 +303,18 @@ export default function Intro() {
         />
       </div>
       <DemoZone>
-        <Market step={marketStep} />
+        <Market
+          amountRight={
+            marketStep < 3
+              ? STARTING_USDC_BALANCE
+              : STARTING_USDC_BALANCE - 49000 * 2
+          }
+          amountLeft={marketStep < 3 ? 0 : 2}
+          marketPosition={["50%", "0%"]}
+          bagPosition={["100%", "100%"]}
+          showMarket={marketStep > 0}
+          showCoins={marketStep > 1}
+        />
       </DemoZone>
       {/* <button
         className={`bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded ${

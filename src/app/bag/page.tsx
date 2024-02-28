@@ -66,15 +66,12 @@ export const FillableBag = ({
 }) => {
   const [nummies, setNummies] = useState(0)
 
-  const [spring, api] = useSpring(
-    () => ({
-      top: bagY,
-      left: bagX,
-      //transform: `scale(${1 + nummies / 10})`,
-      //config: { tension: 200, friction: 20 },
-    }),
-    [nummies]
-  )
+  const spring = useSpring({
+    top: bagY,
+    left: bagX,
+    //transform: `scale(${1 + nummies / 10})`,
+    //config: { tension: 200, friction: 20 },
+  })
 
   return (
     <>

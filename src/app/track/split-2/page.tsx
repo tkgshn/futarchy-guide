@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 import { Block, DemoZone } from "../intro/page"
-import { Coin, Splitter } from "@/app/coinsplit/page"
+import { Splitter, USDCoin } from "@/app/coinsplit/page"
 import { AnimatedEnter } from "@/app/market/page"
 
 export default function Chapter2() {
@@ -17,11 +17,14 @@ export default function Chapter2() {
   }
 
   const showPassCoinAfter = 3
-  const showFailCoinAfter = 5
+  const showFailCoinAfter = 6
+  const demonstrateMergeAfter = 8
+  const recombineCoinsAfter = 9
   const showCoinAfter = 99
   const splitCoinAfter = 99
 
-  const combineCoins = false
+  const combineCoins =
+    read > demonstrateMergeAfter && read < recombineCoinsAfter
 
   return (
     <main
@@ -41,16 +44,27 @@ export default function Chapter2() {
               "What you want is for your investment to be *conditional* on the proposal passing. That way, if the proposal fails, you'll have kept your money.'",
             ],
             [
-              "In order to do that, we need to take a step back and explain conditional tokens.",
+              "You need a way to be holding 100% META in the case where the proposal passes, while at the same time holding 100% USDC in the case where the proposal fails.",
+            ],
+            [
+              "How? Let's take a step back. It's time to learn about conditional tokens. For every active proposal, the MetaDAO lets you create conditional tokens.",
             ],
             [
               500,
-              "What you're looking at now is 1 META, conditional upon passing the hypertronics proposal. For short, let's call it \"pass META\", or pMETA.", //insert gag about renaming the token.
+              "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal.", // todo insert gag about renaming the token.
+              500,
+              "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal. If the proposal passes, it will turn into 1 USDC.", //insert gag about renaming the token.
             ],
+            ['For short, we\'ll call it "pass USDC", or pUSDC.'],
+            ["Likewise, it has a sister token: fUSDC."],
             [
-              "It functions like any other token: \n   you can buy it, sell it, or trade it. ",
+              "If the proposal passes, the pUSDC will become USDC. If the proposal fails, the fUSDC will become USDC.",
             ],
-            ["Likewise, it has a sister token: fMETA. "],
+            ["Thus, having one of each is the same as just having 1 USDC."],
+            [
+              "That's not the interesting part. The interesting part is that you can *trade* each of them separately, for conditional meta.",
+            ], // todo timing
+            ["Let's split your USDC bag now."],
           ]}
         />
       </div>
@@ -63,18 +77,18 @@ export default function Chapter2() {
             split={!combineCoins && read > showFailCoinAfter}
             left={
               <AnimatedEnter>
-                <Coin
+                <USDCoin
                   condition="pass"
-                  label={!combineCoins ? "1 pMETA" : "1 META"}
+                  label={!combineCoins ? "1 pUSDC" : "1 USDC"}
                 />
               </AnimatedEnter>
             }
             right={
               read > showFailCoinAfter ? (
                 <AnimatedEnter>
-                  <Coin
+                  <USDCoin
                     condition="fail"
-                    label={!combineCoins ? "1 fMETA" : "1 META"}
+                    label={!combineCoins ? "1 fUSDC" : "1 USDC"}
                   />
                 </AnimatedEnter>
               ) : null

@@ -1,5 +1,5 @@
 "use client"
-import { COIN_COLOR, USDC_COLOR } from "@/constants"
+import { COIN_COLOR, STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
 import { Coinsplit, USDCSplit } from "../coinsplit/page"
 
 import { useSpring, animated } from "@react-spring/web"
@@ -47,53 +47,77 @@ export function MisterMarket() {
   )
 }
 
+const useStupidSprings = (
+  balance: number // this is a lie. its actually like 4 minus this number
+) => {
+  const idiotBalance = 4 - balance
+  const left1 = useSpring({
+    left: idiotBalance > 0 ? "50%" : "0%",
+    top: idiotBalance > 0 ? "0%" : "100%",
+  })
+  const left2 = useSpring({
+    left: idiotBalance > 1 ? "50%" : idiotBalance > 0 ? "0%" : "3%",
+    top: idiotBalance > 1 ? "0%" : idiotBalance > 0 ? "100%" : "103%",
+  })
+  const left3 = useSpring({
+    left:
+      idiotBalance > 2
+        ? "50%"
+        : idiotBalance > 1
+        ? "0%"
+        : idiotBalance > 0
+        ? "3%"
+        : "6%",
+    top:
+      idiotBalance > 2
+        ? "0%"
+        : idiotBalance > 1
+        ? "100%"
+        : idiotBalance > 0
+        ? "103%"
+        : "106%",
+  })
+  const left4 = useSpring({
+    left:
+      idiotBalance > 3
+        ? "50%"
+        : idiotBalance > 2
+        ? "0%"
+        : idiotBalance > 1
+        ? "3%"
+        : idiotBalance > 0
+        ? "6%"
+        : "9%",
+    top:
+      idiotBalance > 3
+        ? "0%"
+        : idiotBalance > 2
+        ? "100%"
+        : idiotBalance > 1
+        ? "103%"
+        : idiotBalance > 0
+        ? "106%"
+        : "109%",
+  })
+  return [left1, left2, left3, left4]
+}
+
 export function MarketBase({
   left,
   right,
   buyLeft,
   leftBalance, // this is a lie. its actually like 4 minus this number
+  bagPosition,
+  targetPosition,
 }: {
   left: React.ReactNode
   right: React.ReactNode
   buyLeft: MutableRefObject<null | (() => void)>
   leftBalance: number
+  bagPosition: [x: string, y: string]
+  targetPosition: [x: string, y: string]
 }) {
-  const balance = leftBalance
-  const left1 = useSpring({
-    left: balance > 0 ? "50%" : "0%",
-    top: balance > 0 ? "0%" : "100%",
-  })
-  const left2 = useSpring({
-    left: balance > 1 ? "50%" : balance > 0 ? "0%" : "3%",
-    top: balance > 1 ? "0%" : balance > 0 ? "100%" : "103%",
-  })
-  const left3 = useSpring({
-    left: balance > 2 ? "50%" : balance > 1 ? "0%" : balance > 0 ? "3%" : "6%",
-    top:
-      balance > 2 ? "0%" : balance > 1 ? "100%" : balance > 0 ? "103%" : "106%",
-  })
-  const left4 = useSpring({
-    left:
-      balance > 3
-        ? "50%"
-        : balance > 2
-        ? "0%"
-        : balance > 1
-        ? "3%"
-        : balance > 0
-        ? "6%"
-        : "9%",
-    top:
-      balance > 3
-        ? "0%"
-        : balance > 2
-        ? "100%"
-        : balance > 1
-        ? "103%"
-        : balance > 0
-        ? "106%"
-        : "109%",
-  })
+  const [left1, left2, left3, left4] = useStupidSprings(leftBalance)
 
   return (
     <>
@@ -113,8 +137,8 @@ export function MarketBase({
       <div>
         <FillableBag
           emitRef={buyLeft}
-          bagPosition={["100%", "100%"]}
-          targetPosition={["50%", "0%"]}
+          bagPosition={bagPosition}
+          targetPosition={targetPosition}
           bag={right}
           thingy={
             <div className="scale-[0.5]">
@@ -136,79 +160,100 @@ const LEFT_BALANCE_EACH_STEP = {
   1: 4,
 }
 
-const STARTING_USDC_BALANCE = 147000
-export function Market({ step }: { step: number }) {
+const ANIMATION_DURATION = 1500
+export function Market({
+  bagPosition,
+  marketPosition,
+  amountRight,
+  amountLeft,
+  showMarket,
+  showCoins,
+}: {
+  bagPosition: [x: string, y: string]
+  marketPosition: [x: string, y: string]
+  amountRight: number
+  amountLeft: number
+  showMarket: boolean
+  showCoins: boolean
+}) {
   const buyLeft = useRef<null | (() => void)>(null)
 
-  const [leftBalance, setLeftBalance] = useState(4) // this is a lie. its actually like 4 minus this number
-  const [rightBalance, setRightBalance] = useState(147000)
+  const prevAmountRight = useRef(amountRight)
+  const prevAmountLeft = useRef(amountLeft)
 
-  const prevStep = useRef(0)
+  const [awaitedLeftAmount, setAwaitedLeftBalance] = useState(amountLeft)
+
   useEffect(() => {
+    const diffRight = amountRight - prevAmountRight.current
+    const coinsBought = Math.floor(Math.abs(diffRight / 49000))
+    const actionCount = coinsBought * 15
+    const actionType = diffRight < 0 ? "buyLeft" : "sellLeft"
+
+    const coinsBought2 = amountLeft - prevAmountLeft.current
+
     const buyStuff = async () => {
-      setRightBalance(147000 - 49000)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(100)
-      buyLeft.current?.()
-      await sleep(400)
+      for (let i = 0; i < actionCount; i++) {
+        if (actionType === "buyLeft") {
+          buyLeft.current?.()
+        }
+        await sleep(ANIMATION_DURATION / actionCount)
+      }
 
-      setLeftBalance(3)
-      await sleep(500)
-      setLeftBalance(2)
-    }
+      for (let i = 0; i < coinsBought2; i++) {
+        await sleep(400)
 
-    if (prevStep.current < 3 && step === 3) {
-      buyStuff()
+        setAwaitedLeftBalance(
+          (prev) => prev + coinsBought2 / Math.abs(coinsBought2)
+        )
+      }
+
+      setAwaitedLeftBalance(amountLeft)
     }
-    prevStep.current = step
-  }, [step])
+    buyStuff()
+    prevAmountRight.current = amountRight
+    prevAmountLeft.current = amountLeft
+  }, [amountLeft, amountRight])
 
   return (
     <>
-      {step > 1 && (
+      {showCoins && (
         <MarketBase
-          leftBalance={leftBalance}
+          bagPosition={bagPosition}
+          targetPosition={marketPosition}
+          leftBalance={awaitedLeftAmount}
           buyLeft={buyLeft}
           left={<Coinsplit />}
-          right={<USDCBag amount={rightBalance} />}
+          right={<USDCBag amount={amountRight} />}
         />
       )}
-      {step > 0 && <MisterMarket />}
+      {showMarket && <MisterMarket />}
     </>
   )
 }
 
 export default function Home() {
+  const [amountRight, setAmountRight] = useState(STARTING_USDC_BALANCE)
+  const [amountLeft, setAmountLeft] = useState(0)
+
+  const buy = () => {
+    setAmountRight((prev) => prev - 49000)
+    setAmountLeft((prev) => prev + 1)
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
+    <main
+      className="flex min-h-screen flex-col items-center justify-center p-24"
+      onClick={buy}
+    >
       <DemoZone>
-        <Market step={4} />
+        <Market
+          showCoins
+          showMarket
+          marketPosition={["50%", "0%"]}
+          bagPosition={["100%", "100%"]}
+          amountLeft={amountLeft}
+          amountRight={amountRight}
+        />
       </DemoZone>
     </main>
   )

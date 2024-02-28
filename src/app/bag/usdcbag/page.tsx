@@ -1,6 +1,6 @@
 "use client"
 import { DemoZone } from "@/app/track/intro/page"
-import { USDC_COLOR } from "@/constants"
+import { STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
 import { animated, useSpring } from "@react-spring/web"
 import { useEffect, useState } from "react"
 
@@ -12,8 +12,8 @@ function useSpringEnter() {
   return spring
 }
 
-const BIGGLIEST_AMOUNT = 147000
-const SMOLLEST_AMOUNT = 147000 - 50000 * 3
+const BIGGLIEST_AMOUNT = STARTING_USDC_BALANCE
+const SMOLLEST_AMOUNT = STARTING_USDC_BALANCE - 50000 * 3
 
 const radiusFromArea = (area: number) => Math.sqrt(area / Math.PI)
 const BIGGLIEST_AREA = 125 * 125 * Math.PI
