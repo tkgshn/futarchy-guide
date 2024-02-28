@@ -7,6 +7,7 @@ import { MutableRefObject, useEffect, useRef, useState } from "react"
 import { DemoZone } from "../track/intro/page"
 import { FillableBag } from "../bag/page"
 import { USDCBag } from "../bag/usdcbag/page"
+import clsx from "clsx"
 
 function useSpringEnter() {
   const [spring, api] = useSpring(() => ({ from: { opacity: 0, y: -500 } }), [])
@@ -21,12 +22,20 @@ export function AnimatedEnter({ children }: { children: React.ReactNode }) {
   return <animated.div style={spring}>{children}</animated.div>
 }
 
-export function MisterMarket() {
+export function MisterMarket({ condition }: { condition?: "pass" | "fail" }) {
   const spring = useSpringEnter()
   return (
     <animated.div style={spring}>
       <div
-        className="bg-zinc-700 rounded-xl border-zinc-300 flex flex-col justify-center items-center font-mono text-center select-none"
+        className={clsx(
+          "rounded-xl flex flex-col justify-center items-center font-mono text-center",
+          "bg-zinc-700 rounded-xl",
+          condition === undefined
+            ? "border-zinc-300 text-white"
+            : condition === "pass"
+            ? "border-lime-100 text-lime-100"
+            : "border-red-100 text-red-100"
+        )}
         style={{
           position: "absolute",
           top: "0",
@@ -37,10 +46,43 @@ export function MisterMarket() {
           height: "250px",
         }}
       >
-        <div className="text-5xl mb-3">the market</div>
+        <div className="text-5xl mb-3">
+          {condition === undefined ? (
+            "the"
+          ) : condition === "pass" ? (
+            <span className="text-lime-500">PASS</span>
+          ) : (
+            <span className="text-red-500">FAIL</span>
+          )}{" "}
+          market
+        </div>
         <div>
-          1 <span style={{ color: COIN_COLOR }}>META</span> :: 49,000{" "}
-          <span style={{ color: USDC_COLOR }}>USDC</span>
+          1{" "}
+          <span
+            style={{ color: condition === undefined ? COIN_COLOR : undefined }}
+          >
+            {
+              {
+                none: "",
+                fail: <span className="text-red-500">f</span>,
+                pass: <span className="text-lime-500">p</span>,
+              }[condition ?? "none"]
+            }
+            META
+          </span>{" "}
+          :: 49,000{" "}
+          <span
+            style={{ color: condition === undefined ? USDC_COLOR : undefined }}
+          >
+            {
+              {
+                none: "",
+                fail: <span className="text-red-500">f</span>,
+                pass: <span className="text-lime-500">p</span>,
+              }[condition ?? "none"]
+            }
+            USDC
+          </span>
         </div>
       </div>
     </animated.div>
@@ -260,7 +302,7 @@ export function Market({
           }
         />
       )}
-      {showMarket && <MisterMarket />}
+      {showMarket && <MisterMarket condition={condition} />}
     </>
   )
 }
