@@ -1,5 +1,5 @@
 "use client"
-import { DemoZone } from "@/app/track/intro/page"
+import { DemoZone } from "@/app/track/intro/DemoZone"
 import { STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
 import { animated, useSpring } from "@react-spring/web"
 import { useEffect, useState } from "react"

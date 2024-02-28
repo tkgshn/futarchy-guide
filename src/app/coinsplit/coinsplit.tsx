@@ -1,7 +1,7 @@
 "use client"
 import { useSpring, animated, useSpringRef, useChain } from "@react-spring/web"
 import { ReactNode, useEffect, useState } from "react"
-import { DemoZone } from "../track/intro/page"
+import { DemoZone } from "../track/intro/DemoZone"
 
 export function Coin({
   condition,

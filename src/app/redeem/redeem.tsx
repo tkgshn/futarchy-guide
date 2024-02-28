@@ -1,7 +1,7 @@
 "use client"
 import { animated, useSpring } from "@react-spring/web"
 import { ReactNode, useState } from "react"
-import { Coin } from "../coinsplit/page"
+import { Coin } from "../coinsplit/coinsplit"
 
 export const Redeem = ({
   left,
@@ -47,8 +47,8 @@ export default function Home() {
       <div>
         <Redeem
           phase={phase}
-          left={<Coin condition="pass" showPrefix={true} />}
-          right={<Coin condition="fail" showPrefix={true} />}
+          left={<Coin condition="pass" />}
+          right={<Coin condition="fail" />}
         />
       </div>
       <div>bbbbb</div>

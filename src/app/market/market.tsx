@@ -1,12 +1,12 @@
 "use client"
 import { COIN_COLOR, STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
-import { Coin, Coinsplit, USDCSplit } from "../coinsplit/page"
+import { Coin, Coinsplit, USDCSplit } from "../coinsplit/coinsplit"
 
 import { useSpring, animated } from "@react-spring/web"
 import { MutableRefObject, useEffect, useRef, useState } from "react"
-import { DemoZone } from "../track/intro/page"
-import { FillableBag } from "../bag/page"
-import { USDCBag } from "../bag/usdcbag/page"
+import { DemoZone } from "../track/intro/DemoZone"
+import { FillableBag } from "../bag/bag"
+import { USDCBag } from "../bag/usdcbag/usdcbag"
 import clsx from "clsx"
 
 function useSpringEnter() {

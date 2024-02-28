@@ -1,95 +1,13 @@
 "use client"
-import { useState, ReactNode, useEffect } from "react"
+import { useState, ReactNode } from "react"
 import { animated, useSpring } from "@react-spring/web"
 import { TypeAnimation } from "react-type-animation"
-import { useParams, useRouter } from "next/navigation"
-import useMeasure from "react-use-measure"
-import { Market } from "@/app/market/page"
-import React from "react"
+import { Market } from "@/app/market/market"
 import { STARTING_USDC_BALANCE } from "@/constants"
-
-const defaultParams = {
-  //splitter: (str: string) => str.split(/(?= )/),
-  speed: 85,
-  cursor: false,
-  className: "text-2xl whitespace-pre-line w-full",
-} as const
-
-export const useHash = () => {
-  const router = useRouter()
-
-  const params = useParams()
-  const [hash, setHash] = useState("")
-
-  useEffect(() => {
-    const currentHash = window.location.hash.replace("#", "")
-    setHash(currentHash)
-  }, [params])
-
-  const pushHash = (x: string) => router.push(`#${x}`)
-
-  return [hash, pushHash] as const
-}
-
-export const BetterTypeAnimation = (
-  props: Parameters<typeof TypeAnimation>[0] & {
-    doneWaiting: () => void
-    fastForward?: boolean
-  }
-) => {
-  const [ref, { height }] = useMeasure()
-
-  const [spring, api] = useSpring(
-    () => ({ from: { height: 0, marginTop: 0 } }),
-    []
-  )
-  useEffect(() => {
-    api.start({ to: { height: height, marginTop: 24 } })
-  }, [api, height])
-  console.log("height", height)
-
-  const finalText = props.sequence.findLast(
-    (x) => typeof x === "string"
-  ) as string
-
-  // trigger all callbacks if fastforwarded?
-
-  return (
-    <animated.div className="relative" style={spring}>
-      <div
-        ref={ref}
-        className={
-          (props.fastForward ? "opacity-100" : "opacity-0") +
-          " select-none " +
-          defaultParams.className
-        }
-      >
-        {finalText}
-      </div>
-      <span className={props.fastForward ? "opacity-0" : "opacity-100"}>
-        <TypeAnimation
-          aria-hidden={true}
-          {...defaultParams}
-          {...props}
-          className={
-            "absolute top-0 left-0 right-0 bottom-0 select-none " +
-            defaultParams.className
-          }
-          sequence={[
-            250,
-            ...props.sequence,
-            () => {
-              if (!props.fastForward) {
-                //TODO? this might need to use a ref, but not sure i even care.
-                props.doneWaiting()
-              }
-            },
-          ]}
-        />
-      </span>
-    </animated.div>
-  )
-}
+import { BetterTypeAnimation } from "./BetterTypeAnimation"
+import { useHash } from "./useHash"
+import { Block } from "./Block"
+import { DemoZone } from "./DemoZone"
 
 const Block1 = ({
   read,
@@ -154,61 +72,10 @@ const Block1 = ({
   )
 }
 
-type BlockSequence = (
+export type BlockSequence = (
   | Parameters<typeof TypeAnimation>[0]["sequence"]
   | ReactNode
 )[]
-
-export const Block = ({
-  read,
-  doneWaiting,
-  fade,
-  sequences,
-}: {
-  read: number
-  doneWaiting: () => void
-  fade: boolean
-  sequences: BlockSequence
-}) => {
-  const spring = useSpring({
-    from: { opacity: 1 },
-    to: {
-      opacity: fade ? 0.5 : 1,
-      y: fade ? -48 : 0,
-    },
-  })
-
-  return (
-    <animated.div className="flex flex-col" style={spring}>
-      {sequences.map(
-        (sequence, index) =>
-          read > index &&
-          (Array.isArray(sequence) ? (
-            <BetterTypeAnimation
-              key={
-                index + sequence.filter((x) => typeof x === "string").join("")
-              }
-              doneWaiting={doneWaiting}
-              sequence={sequence}
-              fastForward={read > index + 1}
-            />
-          ) : (
-            <React.Fragment key={index}>{sequence}</React.Fragment>
-          ))
-      )}
-    </animated.div>
-  )
-}
-
-export function DemoZone({ children }: { children?: ReactNode }) {
-  return (
-    <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
-      <div className="w-full h-full flex-1 max-w-[404px] max-h-[350px] relative scale-90">
-        {children}
-      </div>
-    </div>
-  )
-}
 
 export default function Intro() {
   const [read, setRead] = useState(0)

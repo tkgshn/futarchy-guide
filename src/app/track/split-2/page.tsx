@@ -1,8 +1,9 @@
 "use client"
 import { useState } from "react"
-import { BetterTypeAnimation, Block } from "../intro/page"
-import { Splitter, USDCoin } from "@/app/coinsplit/page"
-import { AnimatedEnter, Market } from "@/app/market/page"
+import { Block } from "../intro/Block"
+import { BetterTypeAnimation } from "../intro/BetterTypeAnimation"
+import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
+import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 
 export default function Chapter2() {
