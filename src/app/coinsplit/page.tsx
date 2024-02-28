@@ -5,19 +5,15 @@ import { DemoZone } from "../track/intro/page"
 
 export function Coin({
   condition,
-  showPrefix,
-  showLabel,
+  label,
 }: {
   condition: "pass" | "fail"
-  showPrefix: boolean
-  showLabel?: boolean
+  label?: string
 }) {
   const radius = 90
   const circumference = 2 * Math.PI * radius
   const dashCount = 40 // Choose the number of dashes you want
   const dasharray = circumference / dashCount
-
-  const hideLabel = showLabel === false
 
   return (
     <svg
@@ -64,19 +60,18 @@ export function Coin({
         style={{ mask: "url(#mask)" }}
       />
 
-      {/* <text
+      <text
         x="50%"
-        y="225"
+        y="230"
         textAnchor="middle"
         className={
           (condition === "pass" ? "fill-lime-500 " : "fill-red-500 ") +
-          (hideLabel ? "opacity-0 " : "") +
           "font-mono"
         }
         style={{ fontSize: "20px" }}
       >
-        1 {showPrefix ? (condition === "pass" ? "p" : "f") : ""}META
-      </text> */}
+        {label}
+      </text>
     </svg>
   )
 }
@@ -85,8 +80,11 @@ export function Splitter({
   split,
   left,
   right,
+  doSproingy,
 }: {
   split?: boolean
+  /** whether to do a little sproingy boing upon separation. */
+  doSproingy?: boolean
   left: ReactNode
   right: ReactNode
 }) {
@@ -99,10 +97,11 @@ export function Splitter({
   useEffect(() => {
     api.start({
       to: async (next) => {
-        await next({
-          pos: split ? 40 : 50,
-          config: { friction: split ? 10 : undefined },
-        })
+        if (doSproingy)
+          await next({
+            pos: split ? 38 : 50,
+            config: { friction: split ? 10 : undefined },
+          })
         await next({ pos: split ? 0 : 50, config: {} })
       },
     })
@@ -130,8 +129,8 @@ export const Coinsplit = ({ split }: { split?: boolean }) => {
   return (
     <Splitter
       split={split}
-      left={<Coin condition="pass" showPrefix />}
-      right={<Coin condition="fail" showPrefix />}
+      left={<Coin condition="pass" />}
+      right={<Coin condition="fail" />}
     />
   )
 }

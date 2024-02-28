@@ -16,6 +16,11 @@ function useSpringEnter() {
   return spring
 }
 
+export function AnimatedEnter({ children }: { children: React.ReactNode }) {
+  const spring = useSpringEnter()
+  return <animated.div style={spring}>{children}</animated.div>
+}
+
 export function MisterMarket() {
   const spring = useSpringEnter()
   return (
