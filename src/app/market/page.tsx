@@ -190,7 +190,7 @@ export function Market({ step }: { step: number }) {
   }, [step])
 
   return (
-    <div className="flex flex-col items-center justify-center select-none">
+    <>
       {step > 1 && (
         <MarketBase
           leftBalance={leftBalance}
@@ -200,7 +200,7 @@ export function Market({ step }: { step: number }) {
         />
       )}
       {step > 0 && <MisterMarket />}
-    </div>
+    </>
   )
 }
 

@@ -110,13 +110,13 @@ export function Splitter({
   return (
     <>
       <animated.div
-        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten"
+        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten top-[50%]"
         style={{ left: pos.to((x) => x + "%") }}
       >
         {left}
       </animated.div>
       <animated.div
-        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten"
+        className="absolute translate-x-[-50%] translate-y-[-50%] mix-blend-lighten top-[50%]"
         style={{ left: pos.to((x) => 100 - x + "%") }}
       >
         {right}

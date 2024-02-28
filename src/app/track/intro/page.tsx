@@ -202,8 +202,8 @@ export const Block = ({
 
 export function DemoZone({ children }: { children?: ReactNode }) {
   return (
-    <div className="w-full flex-1 flex flex-col py-12 justify-center items-center">
-      <div className="w-full h-full flex-1 max-w-[404px] max-h-[350px] relative flex justify-center items-center">
+    <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
+      <div className="w-full h-full flex-1 max-w-[404px] max-h-[350px] relative">
         {children}
       </div>
     </div>
