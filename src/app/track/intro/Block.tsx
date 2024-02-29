@@ -9,13 +9,15 @@ export const Block = ({
   doneWaiting,
   //fade,
   sequences,
+  neverFade,
 }: {
   read: number
   doneWaiting: () => void
   //fade: boolean
   sequences: BlockSequence
+  neverFade?: boolean
 }) => {
-  const fade = read > sequences.length
+  const fade = !neverFade && read > sequences.length
 
   const spring = useSpring({
     from: { opacity: 1 },

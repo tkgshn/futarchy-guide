@@ -61,9 +61,9 @@ export default function Chapter2() {
   const finishedWatchingMarket = read > 27
 
   const itsTimeToBeginRedemption = read > 29
-  const discardFail = read > 30
+  const discardFail = read > 32
   const discardFail2 = discardFail
-  const REDEEEM = read > 32
+  const REDEEEM = read > 33
   //const hideMarketsFinal
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
@@ -284,25 +284,44 @@ export default function Chapter2() {
               "Nice.",
               500,
               "Nice. Once word spread on minetech postfeeds, every beamjunkie wanted a chance to ride the hypertronics wave.",
-            ], //27
+            ], //28
             [
               "Once that happened, META started trading higher on the pass market than in the fail market. Therefore, the proposal passes.",
-            ], //28
+            ], //29
             <span key="huh" className="ml-8 -mr-8 text-yellow-400">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
+                sequence={["That is most rational."]}
+                /* speed={7}
                 sequence={[
-                  "POGGERS.", // todo replace with pog sticker
-                  500,
-                  "POGGERS. I'm now an early hypertronics investor. To the moon!",
-                  500,
-                ]}
-                fastForward={read > 29} //todo
+                  "Lets freaking go.",
+                  250,
+                  "Lets freaking go!",
+                  250,
+                  "Lets freaking go!!!",
+                ]} */
+                fastForward={read > 30} //todo
               />
-            </span>, //29
-            [""],
+            </span>, //30
+            ["Here are your tokens again."], // 31
             [
-              "Now i has to make a brief redeem animation? and fade to white? and polish up animation timings? and figure out how to salvage fastforward? and make a text version? and merge chapters 1 and 2? and make a back button maybe? (that would be painful). or at least ability to scroll up in the text",
+              "Since the proposal did not fail, the fail market is cancelled... ",
+            ], //32,
+            ["...and the pass market's tokens become regular tokens."], //33
+            [
+              "The MetaDAO was able to capture and incorporate your knowledge because you were willing to put your money with your mouth is. The asteroid mining industry is drenched in lies and DAO manipulation, but any effort to drive the pass market down just presents opportunity to beamtech experts like yourself.",
+            ], // 33
+          ]}
+        />
+        <Block
+          neverFade
+          read={read - 34}
+          doneWaiting={() => setWaiting(false)}
+          sequences={[
+            [
+              "Thank you for letting me be your futarchy guide.",
+              500,
+              "Thank you for letting me be your futarchy guide. Welcome to the MetaDAO, cyberanon. ",
             ],
           ]}
         />

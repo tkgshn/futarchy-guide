@@ -28,7 +28,7 @@ export function USDCBag({
   condition?: "pass" | "fail"
   label?: string
 }) {
-  const spring = useSpringEnter()
+  //const spring = useSpringEnter()
 
   const progress =
     (amount - SMOLLEST_AMOUNT) / (BIGGLIEST_AMOUNT - SMOLLEST_AMOUNT)
@@ -40,7 +40,8 @@ export function USDCBag({
   })
 
   return (
-    <animated.div style={spring}>
+    <animated.div //style={spring}
+    >
       <animated.div
         className={
           "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
