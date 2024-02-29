@@ -5,6 +5,7 @@ import { BetterTypeAnimation } from "../intro/BetterTypeAnimation"
 import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
 import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
+import clsx from "clsx"
 
 export default function Chapter2() {
   const [read, setRead] = useState(0)
@@ -27,6 +28,7 @@ export default function Chapter2() {
   const splitBagAFter = 11
   const showMarketsAfter = 12
   const buypMetaAfter = 13
+  const discussFutarchyAfter = 17
 
   //const recombineCoinsAfter = 9
   const showCoinAfter = 99
@@ -43,7 +45,7 @@ export default function Chapter2() {
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
-          fade={false}
+          //fade={false}
           sequences={[
             [
               "You see, rolling out hypertronic tractor beams is still a *proposal*. You only want to buy META in the event that that proposal passes, right? If the proposal fails, your investment thesis -- and the MetaDAO's efforts to grow mining revenue -- will fail right along with it.",
@@ -98,8 +100,43 @@ export default function Chapter2() {
               />
             </span>,
             ["Right. I forgot. You're clueless."],
+          ]}
+        />
+        <Block
+          read={read - 16}
+          doneWaiting={() => setWaiting(false)}
+          //fade={false}
+          sequences={[
             [
-              "Because the pass market and fail market are separate, their prices can diverge. Each market shows us what traders believe META is worth if the proposal passes versus if it fails.",
+              "You didn't realize it yet, but this *is* the vote, and you just voted.",
+            ],
+            [
+              "You're done investing, so let's forget about your tokens for a moment and just focus on the markets.",
+            ],
+            /*  [
+              "To be clear-- your investment doesn't actually require you to understand how the MetaDAO is governed. If the proposal passes, you invest, and if it doesn't, you don't; you don't need to predict whether the proposal passes, because in either case, you've already allocated your funds the way you wanted.",
+            ], */
+            [
+              "Because the markets are separate, their prices will diverge; traders come to a consensus on the price of META in the world where the proposal passes, and a separate consensus on the price of META if the proposal fails.",
+            ],
+            [
+              "A futarchic DAO is market-driven; for every proposal made, a pair of conditional markets like these is created. If the pass market prices META at a higher price than the fail market, the proposal passes. Otherwise, it fails.",
+            ],
+            <span key="great" className="text-right text-yellow-400">
+              <BetterTypeAnimation
+                doneWaiting={() => setWaiting(false)}
+                sequence={[
+                  "That's it? The DAO is just governed by conditional markets? So I've influenced the DAO to pass this proposal, because I pushed the price of pMETA upwards in the pass market?",
+                ]}
+                fastForward={read - 3 > 8}
+              />
+            </span>,
+            ["Yes. Welcome to Futarchy, cyberanon."],
+            [
+              `The market price for META in the world where this proposal passes is $${PMETA_PRICE.toLocaleString()}, and $49,003 in the world where the proposal fails.`,
+            ],
+            [
+              "In this case, you disagree with the markets. You know hypertronics will boost the value of META, but at the moment, the markets say usage of hypertronic tractor beams would cause META to have a lower price.",
             ],
             ["In this case, pMETA is trading below "],
           ]}
@@ -109,14 +146,13 @@ export default function Chapter2() {
       <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
         <div
           className={
-            "w-full h-full flex-1 max-h-[350px] relative scale-90" +
+            "w-full h-full flex-1 max-h-[350px] relative scale-90 transition-all" +
             " " +
-            (read < beginTradingDemoAfter ? "max-w-[404px]" : "max-w-[808px]")
+            (read < beginTradingDemoAfter || read > discussFutarchyAfter
+              ? "max-w-[404px]"
+              : "max-w-[808px]")
           }
         >
-          {/*  {read > showPassCoinAfter && (
-          <Coin condition="pass" label={"1 pMETA"} />
-        )} */}
           {read > showPassCoinAfter && (
             <Splitter
               split={!combineCoins && read > showFailCoinAfter}
@@ -130,9 +166,14 @@ export default function Chapter2() {
                   </AnimatedEnter>
                 ) : read <= beginTradingDemoAfter ? null : (
                   <AnimatedEnter key="trading">
-                    <div className="relative w-[404px] h-[300px] scale-75">
+                    <div
+                      className={clsx(
+                        "relative w-[404px] h-[300px] transition-transform ease-in-out",
+                        read > discussFutarchyAfter ? "scale-100" : "scale-75"
+                      )}
+                    >
                       <Market
-                        showCoins={true}
+                        showCoins={read <= discussFutarchyAfter}
                         showMarket={read > showMarketsAfter}
                         showLeftCoins={read > buypMetaAfter}
                         bagPosition={
@@ -140,7 +181,11 @@ export default function Chapter2() {
                             ? ["100%", "100%"]
                             : ["50%", "50%"]
                         }
-                        marketPosition={["50%", "0%"]}
+                        marketPosition={
+                          read <= discussFutarchyAfter
+                            ? ["50%", "0%"]
+                            : ["50%", "50%"]
+                        }
                         amountLeft={read <= buypMetaAfter ? 0 : 2}
                         amountRight={
                           read <= buypMetaAfter
@@ -166,9 +211,14 @@ export default function Chapter2() {
                     </AnimatedEnter>
                   ) : read <= beginTradingDemoAfter ? null : (
                     <AnimatedEnter key="trading">
-                      <div className="relative w-[404px] h-[300px] scale-75">
+                      <div
+                        className={clsx(
+                          "relative w-[404px] h-[300px] transition-transform ease-in-out",
+                          read > discussFutarchyAfter ? "scale-100" : "scale-75"
+                        )}
+                      >
                         <Market
-                          showCoins={true}
+                          showCoins={read <= discussFutarchyAfter}
                           showMarket={read > showMarketsAfter}
                           showLeftCoins={false}
                           bagPosition={
@@ -176,7 +226,11 @@ export default function Chapter2() {
                               ? ["100%", "100%"]
                               : ["50%", "50%"]
                           }
-                          marketPosition={["50%", "0%"]}
+                          marketPosition={
+                            read <= discussFutarchyAfter
+                              ? ["50%", "0%"]
+                              : ["50%", "50%"]
+                          }
                           amountLeft={0}
                           amountRight={STARTING_USDC_BALANCE}
                           condition="fail"

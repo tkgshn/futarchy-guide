@@ -7,14 +7,16 @@ import { BlockSequence } from "./page"
 export const Block = ({
   read,
   doneWaiting,
-  fade,
+  //fade,
   sequences,
 }: {
   read: number
   doneWaiting: () => void
-  fade: boolean
+  //fade: boolean
   sequences: BlockSequence
 }) => {
+  const fade = read > sequences.length
+
   const spring = useSpring({
     from: { opacity: 1 },
     to: {

@@ -25,14 +25,17 @@ export function AnimatedEnter({ children }: { children: React.ReactNode }) {
 export function MisterMarket({
   condition,
   price,
+  targetPosition,
 }: {
   condition?: "pass" | "fail"
   price?: string
+  targetPosition: [x: string, y: string]
 }) {
   const spring = useSpringEnter()
+  const sprong = useSpring({ top: targetPosition[1], left: targetPosition[0] })
   return (
     <animated.div style={spring}>
-      <div
+      <animated.div
         className={clsx(
           "rounded-xl flex flex-col justify-center items-center font-mono text-center",
           "bg-zinc-700 rounded-xl",
@@ -43,9 +46,8 @@ export function MisterMarket({
             : "border-red-100 text-red-100"
         )}
         style={{
+          ...sprong,
           position: "absolute",
-          top: "0",
-          left: "50%",
           transform: "translate(-50%, -50%)",
           border: "4px dashed",
           width: "250px",
@@ -90,7 +92,7 @@ export function MisterMarket({
             USDC
           </span>
         </div>
-      </div>
+      </animated.div>
     </animated.div>
   )
 }
@@ -310,7 +312,13 @@ export function Market({
           }
         />
       )}
-      {showMarket && <MisterMarket condition={condition} price={price} />}
+      {showMarket && (
+        <MisterMarket
+          targetPosition={marketPosition}
+          condition={condition}
+          price={price}
+        />
+      )}
     </>
   )
 }
