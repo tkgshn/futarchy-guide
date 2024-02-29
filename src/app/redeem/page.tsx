@@ -13,10 +13,10 @@ export const Redeem = ({
   right: ReactNode
 }) => {
   const animation = useSpring({
-    height: phase ? 240 : 0,
+    maxHeight: phase ? "100%" : "0%",
   })
   const animation2 = useSpring({
-    height: phase ? 0 : 240,
+    maxHeight: phase ? "0%" : "100%",
   })
   const animation3 = useSpring({ top: phase ? 0 : 240 })
 
@@ -37,6 +37,40 @@ export const Redeem = ({
   )
 }
 
+export const Redeem2 = ({
+  left,
+  right,
+  phase,
+}: {
+  phase: boolean
+  left: ReactNode
+  right: ReactNode
+}) => {
+  const animation = useSpring({
+    opacity: phase ? 1 : 0,
+  })
+  const animation2 = useSpring({
+    opacity: phase ? 1 : 1,
+  })
+  const animation3 = useSpring({ top: phase ? 0 : 240 })
+
+  return (
+    <div className="">
+      {/*    <animated.div
+        style={animation3}
+        className="w-full h-0 border-2 z-10 absolute border-black"
+      /> */}
+      <animated.div style={animation2} className="h-0">
+        {left}
+      </animated.div>
+
+      <animated.div style={animation} className="">
+        {right}
+      </animated.div>
+    </div>
+  )
+}
+
 export default function Home() {
   const [phase, setPhase] = useState(false)
   return (
@@ -45,7 +79,7 @@ export default function Home() {
       onClick={() => setPhase(!phase)}
     >
       <div>
-        <Redeem
+        <Redeem2
           phase={phase}
           left={<Coin condition="pass" />}
           right={<Coin condition="fail" />}
