@@ -4,6 +4,7 @@ import { animated, useSpring } from "@react-spring/web"
 import { TypeAnimation } from "react-type-animation"
 import useMeasure from "react-use-measure"
 import clsx from "clsx"
+import { sleep } from "@/app/market/sleep"
 
 export const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
@@ -60,12 +61,12 @@ export const BetterTypeAnimation = (
             250,
             ...props.sequence,
             (el) => {
-              el?.classList.add("typey-waiting") // so fucking dumb
               //setDoneTyping(true)
               if (!props.fastForward) {
                 //TODO? this might need to use a ref, but not sure i even care.
                 props.doneWaiting()
               }
+              sleep(250).then(() => el?.classList.add("typey-waiting")) // so fucking dumb
             },
           ]}
         />
