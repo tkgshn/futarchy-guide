@@ -223,8 +223,8 @@ export default function Chapter2() {
     maxWidth:
       (read < beginTradingDemoAfter || read > discussFutarchyAfter) &&
       !itsTimeToBeginRedemption
-        ? "404px"
-        : "808px",
+        ? "606px"
+        : "606px",
   })
 
   //const fudr = useSpringRef()
