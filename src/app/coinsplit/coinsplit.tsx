@@ -80,12 +80,12 @@ export function USDCoin({
   condition,
   label,
 }: {
-  condition: "pass" | "fail"
+  condition?: "pass" | "fail"
   label?: string
 }) {
   const radius = 90
   const circumference = 2 * Math.PI * radius
-  const dashCount = 40 // Choose the number of dashes you want
+  const dashCount = 80 // Choose the number of dashes you want
   const dasharray = circumference / dashCount
 
   return (
@@ -94,7 +94,7 @@ export function USDCoin({
       viewBox="0 0 210 240"
       style={{ width: "210px", height: "240px" }}
     >
-      <mask id="mask">
+      <mask id="usdcMask">
         <rect width="210" height="240" fill="white" />
         <circle
           cx="105"
@@ -130,9 +130,8 @@ export function USDCoin({
         cx="105"
         cy="105"
         r="100"
-        style={{ mask: "url(#mask)" }}
+        style={{ mask: "url(#usdcMask)" }}
       />
-
       <text
         x="50%"
         y="230"
@@ -233,7 +232,7 @@ export function USDCSplit({ active }: { active?: boolean }) {
   return (
     <div
       className="flex flex-row items-center"
-      onClick={active ? () => toggle(!open) : undefined}
+      //onClick={active ? () => toggle(!open) : undefined}
     >
       <animated.div style={peek}>
         <svg

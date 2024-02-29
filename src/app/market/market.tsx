@@ -1,9 +1,15 @@
 "use client"
 import { COIN_COLOR, STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
-import { Coin, Coinsplit, USDCSplit } from "../coinsplit/coinsplit"
+import { Coin, Coinsplit, USDCSplit, USDCoin } from "../coinsplit/coinsplit"
 
 import { useSpring, animated } from "@react-spring/web"
-import { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react"
+import React, {
+  MutableRefObject,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { DemoZone } from "../track/intro/DemoZone"
 import { FillableBag } from "../bag/bag"
 import { USDCBag } from "../bag/usdcbag/usdcbag"
@@ -160,6 +166,7 @@ export function MarketBase({
   leftBalance, // this is a lie. its actually like 4 minus this number
   bagPosition,
   targetPosition,
+  rightCoin,
 }: {
   left: React.ReactNode
   right: React.ReactNode
@@ -168,6 +175,7 @@ export function MarketBase({
   leftBalance: number
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
+  rightCoin: React.ReactNode
 }) {
   const [left1, left2, left3, left4] = useStupidSprings(leftBalance)
 
@@ -193,11 +201,7 @@ export function MarketBase({
           bagPosition={bagPosition}
           targetPosition={targetPosition}
           bag={right}
-          thingy={
-            <div className="scale-[0.5]">
-              <USDCSplit active={false} />
-            </div>
-          }
+          thingy={rightCoin}
         />
       </div>
     </>
@@ -309,6 +313,15 @@ export function Market({
               condition={condition}
               label={rightLabel}
             />
+          }
+          rightCoin={
+            <div className="scale-[0.5]">
+              {condition === undefined ? (
+                <USDCSplit />
+              ) : (
+                <USDCoin condition={condition} />
+              )}
+            </div>
           }
         />
       )}

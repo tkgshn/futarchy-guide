@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Block } from "../intro/Block"
 import { BetterTypeAnimation } from "../intro/BetterTypeAnimation"
 import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
@@ -13,6 +13,24 @@ const usePriceAnimation = (go: boolean) => {
     passPrice: !go ? PMETA_PRICE : 49800,
   })
 }
+
+/** input: number of minutes
+ * output: formatted string in form of: 00d 00h 00m
+ */
+const formatCountdown = (minutes: number) => {
+  const days = Math.floor(minutes / 1440)
+  const hours = Math.floor((minutes % 1440) / 60)
+  const remainingMinutes = Math.floor(minutes % 60)
+
+  const formattedDays = days.toString().padStart(2, "0")
+  const formattedHours = hours.toString().padStart(2, "0")
+  const formattedMinutes = remainingMinutes.toString().padStart(2, "0")
+
+  return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m`
+}
+
+//
+const TIME_LEFT = 1440 * 4 - 870
 
 export default function Chapter2() {
   const [read, setRead] = useState(0)
@@ -37,7 +55,8 @@ export default function Chapter2() {
   const buypMetaAfter = 13
   const discussFutarchyAfter = 17
 
-  const startedWatchingMarket = read > 20
+  const startedWatchingMarket = read > 26
+  const finishedWatchingMarket = read > 27
 
   //const recombineCoinsAfter = 9
   const showCoinAfter = 99
@@ -45,13 +64,68 @@ export default function Chapter2() {
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
-  const passPrice = read <= buypMetaAfter ? PMETA_PRICE : PMETA_PRICE + 2
-  const failPrice = 49003
-  const priceSpring = useSpring({
-    passPrice,
-    failPrice,
+  const passPrice =
+    read <= buypMetaAfter
+      ? PMETA_PRICE
+      : !startedWatchingMarket
+      ? PMETA_PRICE + 2
+      : 51200
+  const failPrice = !startedWatchingMarket ? 49003 : 48300
+  const [priceSpring, priceApi] = useSpring(
+    () => ({
+      from: { passPrice: PMETA_PRICE, failPrice: 49003 },
+    }),
+    []
+  )
+
+  useEffect(() => {
+    if (!startedWatchingMarket) {
+      priceApi.start({
+        to: { passPrice, failPrice },
+        config: { duration: 1500 },
+      })
+    } else {
+      const totalDuration = 10000
+
+      priceApi.start({
+        to: async (next) => {
+          await next({
+            passPrice: PMETA_PRICE + 400,
+            failPrice: 49003 - 500,
+            config: { duration: 2000 },
+          })
+          await next({
+            passPrice: PMETA_PRICE + 1000,
+            failPrice: 49003 - 300,
+            config: { duration: 2000 },
+          })
+          await next({
+            passPrice: PMETA_PRICE + 2000,
+            failPrice: 49003 - 800,
+            config: { duration: 2000 },
+          })
+          await next({
+            passPrice: PMETA_PRICE + 2100,
+            failPrice: 49003 - 500,
+            config: { duration: 2000 },
+          })
+          await next({
+            passPrice: passPrice,
+            failPrice: failPrice,
+            config: { duration: 2000 },
+          })
+        },
+      })
+    }
+  }, [failPrice, passPrice, priceApi, startedWatchingMarket])
+
+  const clockSpring = useSpring({
+    clock: startedWatchingMarket ? 0 : TIME_LEFT,
+    config: { duration: 10000 },
   })
-  const clockSpring = useSpring({ clock: startedWatchingMarket ? 0 : 4 })
+  const clockOpacity = useSpring({
+    opacity: !startedWatchingMarket || finishedWatchingMarket ? 0 : 1,
+  })
 
   const areaSizeSpring = useSpring({
     maxWidth:
@@ -181,14 +255,24 @@ export default function Chapter2() {
               />
             </span>,
             [
-              "Indeed. Not every market participant is a beamjunkie like you, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic.",
+              "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic.",
               500,
-              "Indeed. Not every market participant is a beamjunkie like you, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic. Give it time, you might be glued to the nexus feed, but other tractor beam experts will take time to filter in.",
+              "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic. Give it time, you might be glued to the nexus feed, but other tractor beam experts will take time to filter in.",
             ],
           ]}
         />
+        <Block
+          read={read - 27}
+          doneWaiting={() => setWaiting(false)}
+          sequences={[["Congrats"]]}
+        />
       </div>
-
+      <animated.div
+        /** the countdown */ className={"text-2xl"}
+        style={clockOpacity}
+      >
+        {clockSpring.clock.to((x) => formatCountdown(x))}
+      </animated.div>
       <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
         <animated.div
           className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
