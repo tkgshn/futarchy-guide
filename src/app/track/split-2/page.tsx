@@ -162,40 +162,40 @@ export default function Chapter2() {
           sequences={[
             [
               "You see, rolling out hypertronic tractor beams is still a *proposal*. You only want to buy META in the event that that proposal passes, right? If the proposal fails, your investment thesis -- and the MetaDAO's efforts to grow mining revenue -- will fail right along with it.",
-            ],
+            ], // 1
             [
               "What you want is for your investment to be *conditional* on the proposal passing. That way, if the proposal fails, you'll have kept your money.",
-            ],
+            ], // 2
             [
               "You need a way to be holding META in the case where the proposal passes, while at the same time holding USDC in the case where the proposal fails.",
-            ],
+            ], // 3
             [
               "How? Let's take a step back. It's time to learn about conditional tokens. For every active proposal, the MetaDAO lets you create conditional tokens.",
-            ],
+            ], // 4
             [
               500,
               "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal.", // todo insert gag about renaming the token.
               500,
               "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal. If the proposal passes, it will turn into 1 USDC.", //insert gag about renaming the token.
-            ],
-            ['For short, we\'ll call it "pass USDC", or pUSDC.'],
-            ["Likewise, it has a sister token: fUSDC."],
+            ], // 5
+            ['For short, we\'ll call it "pass USDC", or pUSDC.'], // 6
+            ["Likewise, it has a sister token: fUSDC."], //7
             [
               "If the proposal passes, the pUSDC will become USDC. If the proposal fails, the fUSDC will become USDC.",
-            ],
-            ["Thus, having one of each is the same as just having 1 USDC."],
+            ], //8
+            ["Thus, having one of each is the same as just having 1 USDC."], //9
             [
               "That's not the interesting part. The interesting part is that you can *trade* each of them separately, for conditional META.",
-            ], // todo timing
-            ["Get out your USDC again, let's split it."], //todo timing
+            ], //10  // todo timing
+            ["Get out your USDC again, let's split it."], // 11 //todo timing
             [
               "As I mentioned, you can trade your pUSDC and fUSDC separately. There's a market for each.",
-            ], //todo timing
+            ], //12 //todo timing
             [
               "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails.",
               500,
               "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, but keep your fUSDC.",
-            ],
+            ], //13
             [
               "Perfect.",
               500,
@@ -204,15 +204,15 @@ export default function Chapter2() {
               `Perfect. Now you've invested like a proper futarchic cyberdenizen. If the proposal passes, you'll have 2 META and $${
                 STARTING_USDC_BALANCE - PMETA_PRICE * 2
               } USDC. If the proposal fails, you'll have $${STARTING_USDC_BALANCE} USDC, just as you started.`,
-            ],
+            ], //14
             <span key="great" className="text-yellow-400 ml-8 -mr-8">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={["Great. When will the DAO vote on the proposal?"]}
-                //fastForward={read - 3 > 8}
+                fastForward={read > 15}
               />
-            </span>,
-            ["Right. I forgot. You're clueless."],
+            </span>, //15
+            ["Right. I forgot. You're clueless."], //16
           ]}
         />
         <Block
@@ -222,41 +222,41 @@ export default function Chapter2() {
           sequences={[
             [
               "You didn't realize it yet, but this *is* the vote, and you just voted.",
-            ],
+            ], //17
             [
               "You're done investing, so let's forget about your tokens for a moment and just focus on the markets.",
-            ],
+            ], //18
             /*  [
               "To be clear-- your investment doesn't actually require you to understand how the MetaDAO is governed. If the proposal passes, you invest, and if it doesn't, you don't; you don't need to predict whether the proposal passes, because in either case, you've already allocated your funds the way you wanted.",
             ], */
             [
               "Because the markets are separate, their prices will diverge; traders come to a consensus on the price of META in the world where the proposal passes, and a separate consensus on the price of META if the proposal fails.",
-            ],
+            ], //19
             [
               "A futarchic DAO is market-driven; for every proposal made, a pair of conditional markets like these is created. If the pass market prices META at a higher price than the fail market, the proposal passes. Otherwise, it fails.",
-            ],
+            ], //20
             <span key="thatsit" className="text-yellow-400 ml-8 -mr-8">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={[
                   "That's it? The DAO is just governed by conditional markets? So I've influenced the DAO to pass this proposal, because I pushed the price of pMETA upwards in the pass market?",
                 ]}
-                //fastForward={read - 3 > 8} // todo
+                fastForward={read > 21}
               />
-            </span>,
-            ["Yes. Welcome to Futarchy, cyberanon."],
+            </span>, //21
+            ["Yes. Welcome to Futarchy, cyberanon."], //22
             [
               `The market price for META in the world where this proposal passes is $${(
                 PMETA_PRICE + 2
               ).toLocaleString()}, and $49,003 in the world where the proposal fails.`,
-            ],
+            ], //23
             <span key="what" className="ml-8 -mr-8 text-yellow-400">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={["Wait, that's crazy. "]}
-                // fastForward={read - 3 > 8} // todo
+                fastForward={read > 24} // todo
               />
-            </span>,
+            </span>, //24
             <span key="huh" className="ml-8 -mr-8 text-yellow-400">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
@@ -266,14 +266,14 @@ export default function Chapter2() {
 
                   "Shouldn't the price in the pass market be higher? There is no way the MetaDAO is worth more without using hypertronics. The crystallic yields are over 500% greater than conventional tractor beams!",
                 ]}
-                //fastForward={read - 3 > 8} //todo
+                fastForward={read > 25} //todo
               />
-            </span>,
+            </span>, //25
             [
               "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic.",
               500,
               "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic. Give it time, you might be glued to the nexus feed, but other tractor beam experts will take time to filter in.",
-            ],
+            ], // 26
           ]}
         />
         <Block
@@ -284,10 +284,10 @@ export default function Chapter2() {
               "Nice.",
               500,
               "Nice. Once word spread on minetech postfeeds, every beamjunkie wanted a chance to ride the hypertronics wave.",
-            ],
+            ], //27
             [
               "Once that happened, META started trading higher on the pass market than in the fail market. Therefore, the proposal passes.",
-            ],
+            ], //28
             <span key="huh" className="ml-8 -mr-8 text-yellow-400">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
@@ -297,9 +297,9 @@ export default function Chapter2() {
                   "POGGERS. I'm now an early hypertronics investor. To the moon!",
                   500,
                 ]}
-                //fastForward={read - 3 > 8} //todo
+                fastForward={read > 29} //todo
               />
-            </span>,
+            </span>, //29
             [""],
             [
               "Now i has to make a brief redeem animation? and fade to white? and polish up animation timings? and figure out how to salvage fastforward? and make a text version? and merge chapters 1 and 2? and make a back button maybe? (that would be painful). or at least ability to scroll up in the text",
