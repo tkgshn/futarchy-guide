@@ -6,6 +6,13 @@ import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
 import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
+import { animated, useSpring } from "@react-spring/web"
+
+const usePriceAnimation = (go: boolean) => {
+  const spring = useSpring({
+    passPrice: !go ? PMETA_PRICE : 49800,
+  })
+}
 
 export default function Chapter2() {
   const [read, setRead] = useState(0)
@@ -30,18 +37,35 @@ export default function Chapter2() {
   const buypMetaAfter = 13
   const discussFutarchyAfter = 17
 
+  const startedWatchingMarket = read > 20
+
   //const recombineCoinsAfter = 9
   const showCoinAfter = 99
   const splitCoinAfter = 99
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
+  const passPrice = read <= buypMetaAfter ? PMETA_PRICE : PMETA_PRICE + 2
+  const failPrice = 49003
+  const priceSpring = useSpring({
+    passPrice,
+    failPrice,
+  })
+  const clockSpring = useSpring({ clock: startedWatchingMarket ? 0 : 4 })
+
+  const areaSizeSpring = useSpring({
+    maxWidth:
+      read < beginTradingDemoAfter || read > discussFutarchyAfter
+        ? "404px"
+        : "808px",
+  })
+
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-start p-24"
       onClick={nextChat}
     >
-      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 justify-end max-w-3xl">
+      <div className="mb-20 h-[30vh] w-full flex flex-col gap-4 justify-end max-w-3xl">
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -51,10 +75,10 @@ export default function Chapter2() {
               "You see, rolling out hypertronic tractor beams is still a *proposal*. You only want to buy META in the event that that proposal passes, right? If the proposal fails, your investment thesis -- and the MetaDAO's efforts to grow mining revenue -- will fail right along with it.",
             ],
             [
-              "What you want is for your investment to be *conditional* on the proposal passing. That way, if the proposal fails, you'll have kept your money.'",
+              "What you want is for your investment to be *conditional* on the proposal passing. That way, if the proposal fails, you'll have kept your money.",
             ],
             [
-              "You need a way to be holding 100% META in the case where the proposal passes, while at the same time holding 100% USDC in the case where the proposal fails.",
+              "You need a way to be holding META in the case where the proposal passes, while at the same time holding USDC in the case where the proposal fails.",
             ],
             [
               "How? Let's take a step back. It's time to learn about conditional tokens. For every active proposal, the MetaDAO lets you create conditional tokens.",
@@ -81,7 +105,7 @@ export default function Chapter2() {
             [
               "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails.",
               500,
-              "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, and but not trade your fUSDC.",
+              "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, but keep your fUSDC.",
             ],
             [
               "Perfect.",
@@ -92,7 +116,7 @@ export default function Chapter2() {
                 STARTING_USDC_BALANCE - PMETA_PRICE * 2
               } USDC. If the proposal fails, you'll have $${STARTING_USDC_BALANCE} USDC, just as you started.`,
             ],
-            <span key="great" className="text-right text-yellow-400">
+            <span key="great" className="text-yellow-400 ml-8 -mr-8">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={["Great. When will the DAO vote on the proposal?"]}
@@ -133,7 +157,9 @@ export default function Chapter2() {
             </span>,
             ["Yes. Welcome to Futarchy, cyberanon."],
             [
-              `The market price for META in the world where this proposal passes is $${PMETA_PRICE.toLocaleString()}, and $49,003 in the world where the proposal fails.`,
+              `The market price for META in the world where this proposal passes is $${(
+                PMETA_PRICE + 2
+              ).toLocaleString()}, and $49,003 in the world where the proposal fails.`,
             ],
             <span key="what" className="ml-8 -mr-8 text-yellow-400">
               <BetterTypeAnimation
@@ -164,14 +190,9 @@ export default function Chapter2() {
       </div>
 
       <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
-        <div
-          className={
-            "w-full h-full flex-1 max-h-[350px] relative scale-90 transition-all" +
-            " " +
-            (read < beginTradingDemoAfter || read > discussFutarchyAfter
-              ? "max-w-[404px]"
-              : "max-w-[808px]")
-          }
+        <animated.div
+          className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
+          style={areaSizeSpring}
         >
           {read > showPassCoinAfter && (
             <Splitter
@@ -188,7 +209,7 @@ export default function Chapter2() {
                   <AnimatedEnter key="trading">
                     <div
                       className={clsx(
-                        "relative w-[404px] h-[300px] transition-transform ease-in-out",
+                        "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
                         read > discussFutarchyAfter ? "scale-100" : "scale-75"
                       )}
                     >
@@ -214,7 +235,13 @@ export default function Chapter2() {
                         }
                         condition="pass"
                         rightLabel={!combineCoins ? "pUSDC" : "USDC"}
-                        price={PMETA_PRICE.toLocaleString()}
+                        price={
+                          <animated.span>
+                            {priceSpring.passPrice.to((x) =>
+                              Math.floor(x).toLocaleString()
+                            )}
+                          </animated.span>
+                        }
                       />
                     </div>
                   </AnimatedEnter>
@@ -233,7 +260,7 @@ export default function Chapter2() {
                     <AnimatedEnter key="trading">
                       <div
                         className={clsx(
-                          "relative w-[404px] h-[300px] transition-transform ease-in-out",
+                          "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
                           read > discussFutarchyAfter ? "scale-100" : "scale-75"
                         )}
                       >
@@ -255,7 +282,13 @@ export default function Chapter2() {
                           amountRight={STARTING_USDC_BALANCE}
                           condition="fail"
                           rightLabel={!combineCoins ? "fUSDC" : "USDC"}
-                          price={"49,003"}
+                          price={
+                            <animated.span>
+                              {priceSpring.failPrice.to((x) =>
+                                Math.floor(x).toLocaleString()
+                              )}
+                            </animated.span>
+                          }
                         />
                       </div>
                     </AnimatedEnter>
@@ -265,7 +298,7 @@ export default function Chapter2() {
             />
           )}
           {}
-        </div>
+        </animated.div>
       </div>
     </main>
   )

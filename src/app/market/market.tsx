@@ -3,7 +3,7 @@ import { COIN_COLOR, STARTING_USDC_BALANCE, USDC_COLOR } from "@/constants"
 import { Coin, Coinsplit, USDCSplit } from "../coinsplit/coinsplit"
 
 import { useSpring, animated } from "@react-spring/web"
-import { MutableRefObject, useEffect, useRef, useState } from "react"
+import { MutableRefObject, ReactNode, useEffect, useRef, useState } from "react"
 import { DemoZone } from "../track/intro/DemoZone"
 import { FillableBag } from "../bag/bag"
 import { USDCBag } from "../bag/usdcbag/usdcbag"
@@ -28,7 +28,7 @@ export function MisterMarket({
   targetPosition,
 }: {
   condition?: "pass" | "fail"
-  price?: string
+  price?: ReactNode
   targetPosition: [x: string, y: string]
 }) {
   const spring = useSpringEnter()
@@ -235,7 +235,7 @@ export function Market({
   showLeftCoins: boolean
   condition?: "pass" | "fail"
   rightLabel?: string
-  price?: string
+  price?: ReactNode
 }) {
   const buyLeft = useRef<null | (() => void)>(null)
   const sellLeft = useRef<null | (() => void)>(null)
