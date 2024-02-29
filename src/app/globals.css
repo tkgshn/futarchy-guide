@@ -24,3 +24,16 @@ body {
     text-wrap: balance;
   }
 }
+
+.typey-waiting::after {
+  content: '●';
+  color: #facc15;
+  animation: cursor 2s infinite ;
+  opacity: 0;
+}
+ 
+@keyframes cursor {
+  50% {
+    opacity: 1;
+  }
+}

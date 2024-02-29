@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import { animated, useSpring } from "@react-spring/web"
 import { TypeAnimation } from "react-type-animation"
 import useMeasure from "react-use-measure"
+import clsx from "clsx"
 
 export const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
@@ -18,6 +19,7 @@ export const BetterTypeAnimation = (
   }
 ) => {
   const [ref, { height }] = useMeasure()
+  //const [donetyping, setDoneTyping] = useState(false)
 
   const [spring, api] = useSpring(
     () => ({ from: { height: 0, marginTop: 0 } }),
@@ -45,19 +47,21 @@ export const BetterTypeAnimation = (
       >
         {finalText}
       </div>
-      <span className={props.fastForward ? "opacity-0" : "opacity-100"}>
+      <span className={clsx(props.fastForward ? "opacity-0" : "opacity-100")}>
         <TypeAnimation
           aria-hidden={true}
           {...defaultParams}
           {...props}
-          className={
-            "absolute top-0 left-0 right-0 bottom-0 select-none " +
+          className={clsx(
+            "absolute top-0 left-0 right-0 bottom-0 select-none",
             defaultParams.className
-          }
+          )}
           sequence={[
             250,
             ...props.sequence,
-            () => {
+            (el) => {
+              el?.classList.add("typey-waiting") // so fucking dumb
+              //setDoneTyping(true)
               if (!props.fastForward) {
                 //TODO? this might need to use a ref, but not sure i even care.
                 props.doneWaiting()
