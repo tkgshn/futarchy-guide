@@ -7,7 +7,6 @@ import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
 import { animated, useSpring } from "@react-spring/web"
-import { USDCBag } from "@/app/bag/usdcbag/usdcbag"
 
 const usePriceAnimation = (go: boolean) => {
   const spring = useSpring({
@@ -128,10 +127,13 @@ export default function Chapter2() {
 
   const areaSizeSpring = useSpring({
     maxWidth:
-      read < beginTradingDemoAfter || read > discussFutarchyAfter
+      (read < beginTradingDemoAfter || read > discussFutarchyAfter) &&
+      !itsTimeToBeginRedemption
         ? "404px"
         : "808px",
   })
+
+  const fusdcLeaveSpring = 1
 
   return (
     <main
@@ -406,8 +408,8 @@ export default function Chapter2() {
             />
           )}
           {itsTimeToBeginRedemption && (
-            <>
-              <div className="h-[250px] w-[250px]">
+            <div className="flex flex-row">
+              <div className="flex-1 flex-grow flex justify-center items-center">
                 <div className="relative">
                   <div className="absolute top-[3%] left-[3%] translate-x-0">
                     <Coin condition={"pass"} />
@@ -417,16 +419,52 @@ export default function Chapter2() {
                   </div>
                 </div>
               </div>
-              <div className="relative h-[250px] w-[250px]">
-                <USDCBag
-                  amount={STARTING_USDC_BALANCE - 2 * PMETA_PRICE}
-                  condition="pass"
-                />
+              <div className="flex-1 flex-grow flex justify-center items-center">
+                <div
+                  className={
+                    "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
+                    " " +
+                    "border-lime-100"
+                  }
+                  style={{
+                    //position: "absolute",
+                    background: "#0891b2",
+
+                    //transform: "translate(-50%, -50%)",
+                    width: 191,
+                    height: 191,
+                  }}
+                >
+                  <div className="text-5xl">
+                    ${STARTING_USDC_BALANCE - 2 * PMETA_PRICE}
+                  </div>
+                  <div className="flex-0 h-0 text-lg">pUSDC</div>
+                </div>
               </div>
-              <div className="relative">
-                <USDCBag amount={STARTING_USDC_BALANCE} condition="fail" />
+              <div className="flex-1 flex-grow flex justify-center items-center">
+                <div
+                  className={
+                    "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
+                    " " +
+                    "border-red-100"
+                  }
+                  style={{
+                    //position: "absolute",
+                    background: "#7c3aed",
+                    top: "50%",
+                    left: "50%",
+                    //transform: "translate(-50%, -50%)",
+                    width: 225,
+                    height: 225,
+                  }}
+                >
+                  <div className="text-5xl text-nowrap">
+                    ${STARTING_USDC_BALANCE}
+                  </div>
+                  <div className="flex-0 h-0 text-lg">fUSDC</div>
+                </div>
               </div>
-            </>
+            </div>
           )}
         </animated.div>
       </div>

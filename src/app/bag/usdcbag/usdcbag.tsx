@@ -59,7 +59,7 @@ export function USDCBag({
               : condition === "pass"
               ? "#0891b2"
               : "#7c3aed",
-          top: "0",
+          top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: size,
