@@ -59,6 +59,7 @@ export default function Chapter2() {
   const finishedWatchingMarket = read > 27
 
   const itsTimeToBeginRedemption = read > 29
+  const discardFail = read > 30
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
@@ -133,7 +134,9 @@ export default function Chapter2() {
         : "808px",
   })
 
-  const fusdcLeaveSpring = 1
+  const fusdcLeaveSpring = useSpring({
+    maxWidth: discardFail ? "0%" : "100%",
+  })
 
   return (
     <main
