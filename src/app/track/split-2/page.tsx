@@ -8,6 +8,7 @@ import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
 import { animated, useSpring } from "@react-spring/web"
 import { Redeem2 } from "@/app/redeem/page"
+import { Transition } from "@headlessui/react"
 
 const usePriceAnimation = (go: boolean) => {
   const spring = useSpring({
@@ -317,133 +318,154 @@ export default function Chapter2() {
           className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
           style={areaSizeSpring}
         >
-          {read > showPassCoinAfter && (
+          {
             <Splitter
               split={!combineCoins && read > showFailCoinAfter && !discardFail2}
               left={
-                read <= endCoinDemoAfter ? (
-                  <AnimatedEnter key="conditional tokens">
+                <>
+                  <Transition
+                    appear
+                    show={read > showPassCoinAfter && read <= endCoinDemoAfter}
+                    enter="transition-opacity duration-150"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity duration-150"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
                     <USDCoin
                       condition="pass"
                       label={!combineCoins ? "1 pUSDC" : "1 USDC"}
                     />
-                  </AnimatedEnter>
-                ) : read <= beginTradingDemoAfter ? null : (
-                  <AnimatedEnter key="trading">
-                    <Redeem2
-                      phase={REDEEEM}
-                      left={
-                        <div
-                          className={clsx(
-                            "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
-                            read > discussFutarchyAfter &&
-                              (!itsTimeToBeginRedemption || discardFail)
-                              ? "scale-100"
-                              : "scale-75"
-                          )}
-                        >
-                          <Market
-                            showCoins={
-                              read <= discussFutarchyAfter ||
-                              itsTimeToBeginRedemption
-                            }
-                            showMarket={read > showMarketsAfter}
-                            hideLPMeta={startedWatchingMarket}
-                            showLeftCoins={
-                              read > buypMetaAfter || itsTimeToBeginRedemption
-                            }
-                            bagPosition={
-                              read > showMarketsAfter
-                                ? ["100%", "100%"]
-                                : ["50%", "50%"]
-                            }
-                            marketPosition={
-                              read <= discussFutarchyAfter ||
-                              itsTimeToBeginRedemption
-                                ? ["50%", "0%"]
-                                : ["50%", "50%"]
-                            }
-                            amountLeft={read <= buypMetaAfter ? 0 : 2}
-                            amountRight={
-                              read <= buypMetaAfter
-                                ? STARTING_USDC_BALANCE
-                                : STARTING_USDC_BALANCE - PMETA_PRICE * 2
-                            }
-                            condition="pass"
-                            rightLabel={!combineCoins ? "pUSDC" : "USDC"}
-                            price={
-                              <animated.span>
-                                {priceSpring.passPrice.to((x) =>
-                                  Math.floor(x).toLocaleString()
-                                )}
-                              </animated.span>
-                            }
-                          />
-                        </div>
-                      }
-                      right={
-                        <div
-                          className={clsx(
-                            "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700", //I honestly dont even know why -75% is the (close enough to) right number here and im sorry
-                            read > discussFutarchyAfter &&
-                              (!itsTimeToBeginRedemption || discardFail)
-                              ? "scale-100"
-                              : "scale-75"
-                          )}
-                        >
-                          <Market
-                            showCoins={
-                              read <= discussFutarchyAfter ||
-                              itsTimeToBeginRedemption
-                            }
-                            showMarket={read > showMarketsAfter}
-                            hideLPMeta={startedWatchingMarket}
-                            showLeftCoins={
-                              read > buypMetaAfter || itsTimeToBeginRedemption
-                            }
-                            bagPosition={
-                              read > showMarketsAfter
-                                ? ["100%", "100%"]
-                                : ["50%", "50%"]
-                            }
-                            marketPosition={
-                              read <= discussFutarchyAfter ||
-                              itsTimeToBeginRedemption
-                                ? ["50%", "0%"]
-                                : ["50%", "50%"]
-                            }
-                            amountLeft={read <= buypMetaAfter ? 0 : 2}
-                            amountRight={
-                              read <= buypMetaAfter
-                                ? STARTING_USDC_BALANCE
-                                : STARTING_USDC_BALANCE - PMETA_PRICE * 2
-                            }
-                            rightLabel={!combineCoins ? "pUSDC" : "USDC"}
-                            price={
-                              <animated.span>
-                                {priceSpring.passPrice.to((x) =>
-                                  Math.floor(x).toLocaleString()
-                                )}
-                              </animated.span>
-                            }
-                          />
-                        </div>
-                      }
-                    />
-                  </AnimatedEnter>
-                )
+                  </Transition>
+                  {read <= beginTradingDemoAfter ? null : (
+                    <AnimatedEnter key="trading" from="below">
+                      <Redeem2
+                        phase={REDEEEM}
+                        left={
+                          <div
+                            className={clsx(
+                              "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
+                              read > discussFutarchyAfter &&
+                                (!itsTimeToBeginRedemption || discardFail)
+                                ? "scale-100"
+                                : "scale-75"
+                            )}
+                          >
+                            <Market
+                              showCoins={
+                                read <= discussFutarchyAfter ||
+                                itsTimeToBeginRedemption
+                              }
+                              showMarket={read > showMarketsAfter}
+                              hideLPMeta={startedWatchingMarket}
+                              showLeftCoins={
+                                read > buypMetaAfter || itsTimeToBeginRedemption
+                              }
+                              bagPosition={
+                                read > showMarketsAfter
+                                  ? ["100%", "100%"]
+                                  : ["50%", "50%"]
+                              }
+                              marketPosition={
+                                read <= discussFutarchyAfter ||
+                                itsTimeToBeginRedemption
+                                  ? ["50%", "0%"]
+                                  : ["50%", "50%"]
+                              }
+                              amountLeft={read <= buypMetaAfter ? 0 : 2}
+                              amountRight={
+                                read <= buypMetaAfter
+                                  ? STARTING_USDC_BALANCE
+                                  : STARTING_USDC_BALANCE - PMETA_PRICE * 2
+                              }
+                              condition="pass"
+                              rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                              price={
+                                <animated.span>
+                                  {priceSpring.passPrice.to((x) =>
+                                    Math.floor(x).toLocaleString()
+                                  )}
+                                </animated.span>
+                              }
+                            />
+                          </div>
+                        }
+                        right={
+                          <div
+                            className={clsx(
+                              "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700", //I honestly dont even know why -75% is the (close enough to) right number here and im sorry
+                              read > discussFutarchyAfter &&
+                                (!itsTimeToBeginRedemption || discardFail)
+                                ? "scale-100"
+                                : "scale-75"
+                            )}
+                          >
+                            <Market
+                              showCoins={
+                                read <= discussFutarchyAfter ||
+                                itsTimeToBeginRedemption
+                              }
+                              showMarket={read > showMarketsAfter}
+                              hideLPMeta={startedWatchingMarket}
+                              showLeftCoins={
+                                read > buypMetaAfter || itsTimeToBeginRedemption
+                              }
+                              bagPosition={
+                                read > showMarketsAfter
+                                  ? ["100%", "100%"]
+                                  : ["50%", "50%"]
+                              }
+                              marketPosition={
+                                read <= discussFutarchyAfter ||
+                                itsTimeToBeginRedemption
+                                  ? ["50%", "0%"]
+                                  : ["50%", "50%"]
+                              }
+                              amountLeft={read <= buypMetaAfter ? 0 : 2}
+                              amountRight={
+                                read <= buypMetaAfter
+                                  ? STARTING_USDC_BALANCE
+                                  : STARTING_USDC_BALANCE - PMETA_PRICE * 2
+                              }
+                              rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                              price={
+                                <animated.span>
+                                  {priceSpring.passPrice.to((x) =>
+                                    Math.floor(x).toLocaleString()
+                                  )}
+                                </animated.span>
+                              }
+                            />
+                          </div>
+                        }
+                      />
+                    </AnimatedEnter>
+                  )}
+                </>
               }
               right={
                 read > showFailCoinAfter ? (
                   read <= endCoinDemoAfter ? (
-                    <AnimatedEnter key="conditional tokens">
+                    <Transition
+                      appear
+                      show={
+                        read > showPassCoinAfter && read <= endCoinDemoAfter
+                      }
+                      enter="transition-opacity duration-150"
+                      enterFrom="opacity-0"
+                      enterTo="opacity-100"
+                      leave="transition-opacity duration-150"
+                      leaveFrom="opacity-100"
+                      leaveTo="opacity-0"
+                    >
                       <USDCoin
                         condition="fail"
                         label={!combineCoins ? "1 fUSDC" : "1 USDC"}
                       />
-                    </AnimatedEnter>
+                    </Transition>
                   ) : read <= beginTradingDemoAfter ? null : (
-                    <AnimatedEnter key="trading">
+                    <AnimatedEnter from="below" key="trading">
                       <animated.div style={fusdcLeaveSpring}>
                         <div
                           className={clsx(
@@ -492,7 +514,7 @@ export default function Chapter2() {
                 ) : null
               }
             />
-          )}
+          }
           {/* {itsTimeToBeginRedemption && (
             <div className="flex flex-row">
               <div className="flex-1 flex-grow flex justify-center items-center">

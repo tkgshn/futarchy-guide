@@ -15,17 +15,27 @@ import { FillableBag } from "../bag/bag"
 import { USDCBag } from "../bag/usdcbag/usdcbag"
 import clsx from "clsx"
 import { sleep } from "./sleep"
+import { Transition } from "@headlessui/react"
 
-function useSpringEnter() {
-  const [spring, api] = useSpring(() => ({ from: { opacity: 0, y: -500 } }), [])
+function useSpringEnter(from?: "above" | "below") {
+  const [spring, api] = useSpring(
+    () => ({ from: { opacity: 0, y: from === "below" ? 500 : -500 } }),
+    [from]
+  )
   useEffect(() => {
     api.start({ to: { opacity: 1, y: 0 } })
   }, [api])
   return spring
 }
 
-export function AnimatedEnter({ children }: { children: React.ReactNode }) {
-  const spring = useSpringEnter()
+export function AnimatedEnter({
+  children,
+  from,
+}: {
+  children: React.ReactNode
+  from?: "above" | "below"
+}) {
+  const spring = useSpringEnter(from)
   return <animated.div style={spring}>{children}</animated.div>
 }
 
@@ -185,7 +195,7 @@ export function MarketBase({
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
   rightCoin: React.ReactNode
-  hideLPMeta?: boolean
+  hideLPMeta?: boolean // this should really be instant but isnt
 }) {
   const [left1, left2, left3, left4] = useStupidSprings(
     leftBalance,
@@ -195,11 +205,19 @@ export function MarketBase({
   return (
     <>
       <div className="mix-blend-lighten">
-        {[left4, left3, left2, left1].map((spring, index) => (
+        {[
+          left4,
+          left3,
+          //left2,
+          //left1
+        ].map((spring, index) => (
           <animated.div
             /** LEFT side */
             key={index}
-            className="absolute translate-x-[-50%] translate-y-[-50%]"
+            className={clsx(
+              "absolute translate-x-[-50%] translate-y-[-50%]"
+              //hideLPMeta && leftBalance - 1 < index && "hidden"
+            )}
             style={spring}
             //onClick={() => setBalance((prev) => prev + 1)}
           >
@@ -303,7 +321,7 @@ export function Market({
 
   return (
     <>
-      {showCoins && (
+      {
         <MarketBase
           bagPosition={bagPosition}
           targetPosition={marketPosition}
@@ -312,19 +330,38 @@ export function Market({
           sellLeft={sellLeft}
           hideLPMeta={hideLPMeta}
           left={
-            showLeftCoins &&
-            (condition === undefined ? (
-              <Coinsplit />
-            ) : (
-              <Coin condition={condition} />
-            ))
+            <Transition
+              show={showLeftCoins && showCoins}
+              enter="transition-opacity duration-150"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              {condition === undefined ? (
+                <Coinsplit />
+              ) : (
+                <Coin condition={condition} />
+              )}
+            </Transition>
           }
           right={
-            <USDCBag
-              amount={awaitedRightAmount}
-              condition={condition}
-              label={rightLabel}
-            />
+            <Transition
+              show={showCoins}
+              enter="transition-opacity duration-150"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition-opacity duration-150"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <USDCBag
+                amount={awaitedRightAmount}
+                condition={condition}
+                label={rightLabel}
+              />
+            </Transition>
           }
           rightCoin={
             <div className="scale-[0.5]">
@@ -336,7 +373,7 @@ export function Market({
             </div>
           }
         />
-      )}
+      }
       {showMarket && (
         <MisterMarket
           targetPosition={marketPosition}
