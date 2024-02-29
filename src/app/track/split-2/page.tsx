@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react"
 import { Block } from "../intro/Block"
 import { BetterTypeAnimation } from "../intro/BetterTypeAnimation"
-import { Coin, Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
+import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
 import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
-import { animated, useSpring } from "@react-spring/web"
+import { animated, useChain, useSpring, useSpringRef } from "@react-spring/web"
 
 const usePriceAnimation = (go: boolean) => {
   const spring = useSpring({
@@ -60,6 +60,8 @@ export default function Chapter2() {
 
   const itsTimeToBeginRedemption = read > 29
   const discardFail = read > 30
+  const REDEEEM = read > 31
+  //const hideMarketsFinal
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
@@ -126,17 +128,23 @@ export default function Chapter2() {
     opacity: !startedWatchingMarket || finishedWatchingMarket ? 0 : 1,
   })
 
+  const asr = useSpringRef()
   const areaSizeSpring = useSpring({
+    ref: asr,
     maxWidth:
       (read < beginTradingDemoAfter || read > discussFutarchyAfter) &&
-      !itsTimeToBeginRedemption
+      (!itsTimeToBeginRedemption || discardFail)
         ? "404px"
         : "808px",
   })
 
+  const fudr = useSpringRef()
   const fusdcLeaveSpring = useSpring({
-    maxWidth: discardFail ? "0%" : "100%",
+    ref: fudr,
+    opacity: discardFail ? 0 : 1,
+    //maxWidth: discardFail ? "0%" : "100%",
   })
+  useChain([fudr, asr])
 
   return (
     <main
@@ -307,7 +315,7 @@ export default function Chapter2() {
           className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
           style={areaSizeSpring}
         >
-          {read > showPassCoinAfter && !itsTimeToBeginRedemption && (
+          {read > showPassCoinAfter && (
             <Splitter
               split={!combineCoins && read > showFailCoinAfter}
               left={
@@ -323,20 +331,31 @@ export default function Chapter2() {
                     <div
                       className={clsx(
                         "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
-                        read > discussFutarchyAfter ? "scale-100" : "scale-75"
+                        read > discussFutarchyAfter &&
+                          (!itsTimeToBeginRedemption || discardFail)
+                          ? "scale-100"
+                          : "scale-75",
+                        ""
                       )}
                     >
                       <Market
-                        showCoins={read <= discussFutarchyAfter}
+                        showCoins={
+                          read <= discussFutarchyAfter ||
+                          itsTimeToBeginRedemption
+                        }
                         showMarket={read > showMarketsAfter}
-                        showLeftCoins={read > buypMetaAfter}
+                        hideLPMeta={startedWatchingMarket}
+                        showLeftCoins={
+                          read > buypMetaAfter || itsTimeToBeginRedemption
+                        }
                         bagPosition={
                           read > showMarketsAfter
                             ? ["100%", "100%"]
                             : ["50%", "50%"]
                         }
                         marketPosition={
-                          read <= discussFutarchyAfter
+                          read <= discussFutarchyAfter ||
+                          itsTimeToBeginRedemption
                             ? ["50%", "0%"]
                             : ["50%", "50%"]
                         }
@@ -371,46 +390,56 @@ export default function Chapter2() {
                     </AnimatedEnter>
                   ) : read <= beginTradingDemoAfter ? null : (
                     <AnimatedEnter key="trading">
-                      <div
-                        className={clsx(
-                          "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
-                          read > discussFutarchyAfter ? "scale-100" : "scale-75"
-                        )}
-                      >
-                        <Market
-                          showCoins={read <= discussFutarchyAfter}
-                          showMarket={read > showMarketsAfter}
-                          showLeftCoins={false}
-                          bagPosition={
-                            read > showMarketsAfter
-                              ? ["100%", "100%"]
-                              : ["50%", "50%"]
-                          }
-                          marketPosition={
-                            read <= discussFutarchyAfter
-                              ? ["50%", "0%"]
-                              : ["50%", "50%"]
-                          }
-                          amountLeft={0}
-                          amountRight={STARTING_USDC_BALANCE}
-                          condition="fail"
-                          rightLabel={!combineCoins ? "fUSDC" : "USDC"}
-                          price={
-                            <animated.span>
-                              {priceSpring.failPrice.to((x) =>
-                                Math.floor(x).toLocaleString()
-                              )}
-                            </animated.span>
-                          }
-                        />
-                      </div>
+                      <animated.div style={fusdcLeaveSpring}>
+                        <div
+                          className={clsx(
+                            "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
+                            read > discussFutarchyAfter &&
+                              !itsTimeToBeginRedemption
+                              ? "scale-100"
+                              : "scale-75"
+                          )}
+                        >
+                          <Market
+                            showCoins={
+                              read <= discussFutarchyAfter ||
+                              itsTimeToBeginRedemption
+                            }
+                            showMarket={read > showMarketsAfter}
+                            hideLPMeta={startedWatchingMarket}
+                            showLeftCoins={false}
+                            bagPosition={
+                              read > showMarketsAfter
+                                ? ["100%", "100%"]
+                                : ["50%", "50%"]
+                            }
+                            marketPosition={
+                              read <= discussFutarchyAfter ||
+                              itsTimeToBeginRedemption
+                                ? ["50%", "0%"]
+                                : ["50%", "50%"]
+                            }
+                            amountLeft={0}
+                            amountRight={STARTING_USDC_BALANCE}
+                            condition="fail"
+                            rightLabel={!combineCoins ? "fUSDC" : "USDC"}
+                            price={
+                              <animated.span>
+                                {priceSpring.failPrice.to((x) =>
+                                  Math.floor(x).toLocaleString()
+                                )}
+                              </animated.span>
+                            }
+                          />
+                        </div>
+                      </animated.div>
                     </AnimatedEnter>
                   )
                 ) : null
               }
             />
           )}
-          {itsTimeToBeginRedemption && (
+          {/* {itsTimeToBeginRedemption && (
             <div className="flex flex-row">
               <div className="flex-1 flex-grow flex justify-center items-center">
                 <div className="relative">
@@ -468,7 +497,7 @@ export default function Chapter2() {
                 </div>
               </div>
             </div>
-          )}
+          )} */}
         </animated.div>
       </div>
     </main>
