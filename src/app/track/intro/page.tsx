@@ -78,7 +78,7 @@ export type BlockSequence = (
 )[]
 
 export default function Intro() {
-  const [read, setRead] = useState(0)
+  const [chapterOneRead, setRead] = useState(0)
 
   const [hash, pushStep] = useHash()
   const step = hash === "" ? "0" : hash
@@ -111,12 +111,12 @@ export default function Intro() {
 
       <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 justify-end">
         <Block1
-          read={read}
+          read={chapterOneRead}
           doneWaiting={() => setWaiting(false)}
-          fade={read > 3}
+          fade={chapterOneRead > 3}
         />
         <Block
-          read={read - 3}
+          read={chapterOneRead - 3}
           doneWaiting={() => setWaiting(false)}
           //fade={step === "2"}
           sequences={[
@@ -168,13 +168,6 @@ export default function Intro() {
             />,*/
           ]}
         />
-        {read > 9 && (
-          <div key="borp" className="h-0 relative self-end">
-            <button className="absolute bottom-0 right-0 w-[120px] h-[48px] bg-yellow-500">
-              next page
-            </button>
-          </div>
-        )}
       </div>
       <DemoZone>
         <Market

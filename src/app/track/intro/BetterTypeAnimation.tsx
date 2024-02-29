@@ -66,7 +66,7 @@ export const BetterTypeAnimation = (
                 //TODO? this might need to use a ref, but not sure i even care.
                 props.doneWaiting()
               }
-              sleep(250).then(() => el?.classList.add("typey-waiting")) // so fucking dumb
+              sleep(0).then(() => el?.classList.add("typey-waiting")) // so fucking dumb
             },
           ]}
         />

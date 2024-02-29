@@ -34,8 +34,75 @@ const formatCountdown = (minutes: number) => {
 //
 const TIME_LEFT = 1440 * 4 - 870
 
+const Block1 = ({
+  read,
+  doneWaiting,
+  fade,
+}: {
+  read: number
+  doneWaiting: () => void
+  fade: boolean
+}) => {
+  const spring = useSpring({
+    from: { opacity: 1 },
+    to: {
+      opacity: fade ? 0.5 : 1,
+      y: fade ? -48 : 0,
+    },
+  })
+
+  return (
+    <animated.div className="flex flex-col" style={spring}>
+      {read > -1 && (
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
+          fastForward={read > 0}
+          sequence={[
+            "The year is 2064.",
+            500,
+            "The year is 2064. \n You just got word on the byte nexus that the Meta-dao might be the first corp to fit asteroid miners with hypertronic tractor beams.",
+          ]}
+        />
+      )}
+      {read > 0 && (
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
+          fastForward={read > 1}
+          sequence={[
+            "You know tractor beams like the back of your hand.",
+            500,
+            "You know tractor beams like the back of your hand. The biggest beam corps from Earth say hypertronic isn’t worth the plutonium, they say it barely moves the needle.",
+          ]}
+        />
+      )}
+      {read > 1 && (
+        <BetterTypeAnimation
+          doneWaiting={doneWaiting}
+          fastForward={read > 2}
+          sequence={[
+            "Yeah right.",
+            500,
+            "Yeah right. Hypertronic changes everything.",
+          ]}
+        />
+      )}
+      {read > 2 && (
+        <BetterTypeAnimation
+          fastForward={read > 3}
+          doneWaiting={doneWaiting}
+          sequence={["You want in."]}
+        />
+      )}
+    </animated.div>
+  )
+}
+
 export default function Chapter2() {
-  const [read, setRead] = useState(1)
+  const [read, setRead] = useState(-9)
+
+  const chapterOneRead = read + 9
+  const chapterOneEnded = read > 0
+  const [marketStep, setMarketStep] = useState(0)
 
   const [waiting, setWaiting] = useState(true)
 
@@ -154,7 +221,67 @@ export default function Chapter2() {
       className="flex min-h-screen flex-col items-center justify-start p-24"
       onClick={nextChat}
     >
-      <div className="mb-20 h-[30vh] w-full flex flex-col gap-4 justify-end max-w-3xl">
+      <div className="mb-20 h-[30vh] w-full flex flex-col justify-end max-w-3xl">
+        <Block1
+          read={chapterOneRead}
+          doneWaiting={() => setWaiting(false)}
+          fade={chapterOneRead > 3}
+        />
+        <Block
+          read={chapterOneRead - 3}
+          doneWaiting={() => setWaiting(false)}
+          //fade={step === "2"}
+          sequences={[
+            [
+              500,
+              "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
+            ],
+            [
+              "That's where the market comes in.",
+              250,
+              "That's where the market comes in..",
+              250,
+              "That's where the market comes in...",
+              500,
+              () => setMarketStep(Math.max(marketStep, 1)),
+              "That's where the market comes in.",
+            ],
+            [
+              "You check out prices.",
+              500,
+              "You check out prices. 1 META = 49,000 USDC.", // TODO animate this
+            ],
+            [
+              "It’s low. ",
+              250,
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.",
+              250,
+              "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early.",
+            ],
+            [
+              "You portion out your budget",
+              500,
+              () => setMarketStep(Math.max(marketStep, 2)),
+              1000,
+
+              "You portion out your budget and buy a few META. ",
+              500,
+              () => setMarketStep(Math.max(marketStep, 3)),
+              1500,
+            ],
+            [
+              "Woah woah, slow down. MetaDAO is a *futarchy*. Sure, you can trade this news on the spot market, but there’s a *much better* way. Go ahead and undo that purchase. You’ll thank me later.",
+              () => setMarketStep(Math.max(marketStep, 4)),
+              1500,
+            ],
+            /*<BetterTypeAnimation
+              key="wumbo1"
+              doneWaiting={() => setWaiting(false)}
+              sequence={["a"]}
+              fastForward={read - 3 > 8}
+            />,*/
+          ]}
+        />
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -332,11 +459,31 @@ export default function Chapter2() {
       >
         {clockSpring.clock.to((x) => formatCountdown(x))}
       </animated.div>
-      <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none">
+      <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none mb-20">
         <animated.div
           className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
           style={areaSizeSpring}
         >
+          <Transition
+            show={!chapterOneEnded}
+            leave="transition-opacity duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Market
+              showLeftCoins={marketStep > 2}
+              amountRight={
+                marketStep !== 3
+                  ? STARTING_USDC_BALANCE
+                  : STARTING_USDC_BALANCE - 49000 * 2
+              }
+              amountLeft={marketStep !== 3 ? 0 : 2}
+              marketPosition={["50%", "0%"]}
+              bagPosition={["100%", "100%"]}
+              showMarket={marketStep > 0}
+              showCoins={marketStep > 1}
+            />
+          </Transition>
           {
             <Splitter
               split={!combineCoins && read > showFailCoinAfter && !discardFail2}
@@ -534,65 +681,6 @@ export default function Chapter2() {
               }
             />
           }
-          {/* {itsTimeToBeginRedemption && (
-            <div className="flex flex-row">
-              <div className="flex-1 flex-grow flex justify-center items-center">
-                <div className="relative">
-                  <div className="absolute top-[3%] left-[3%] translate-x-0">
-                    <Coin condition={"pass"} />
-                  </div>
-                  <div className="mix-blend-normal translate-x-0">
-                    <Coin condition={"pass"} />
-                  </div>
-                </div>
-              </div>
-              <div className="flex-1 flex-grow flex justify-center items-center">
-                <div
-                  className={
-                    "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
-                    " " +
-                    "border-lime-100"
-                  }
-                  style={{
-                    //position: "absolute",
-                    background: "#0891b2",
-
-                    //transform: "translate(-50%, -50%)",
-                    width: 191,
-                    height: 191,
-                  }}
-                >
-                  <div className="text-5xl">
-                    ${STARTING_USDC_BALANCE - 2 * PMETA_PRICE}
-                  </div>
-                  <div className="flex-0 h-0 text-lg">pUSDC</div>
-                </div>
-              </div>
-              <div className="flex-1 flex-grow flex justify-center items-center">
-                <div
-                  className={
-                    "rounded-full flex flex-col justify-center items-center font-mono text-center select-none border-4" +
-                    " " +
-                    "border-red-100"
-                  }
-                  style={{
-                    //position: "absolute",
-                    background: "#7c3aed",
-                    top: "50%",
-                    left: "50%",
-                    //transform: "translate(-50%, -50%)",
-                    width: 225,
-                    height: 225,
-                  }}
-                >
-                  <div className="text-5xl text-nowrap">
-                    ${STARTING_USDC_BALANCE}
-                  </div>
-                  <div className="flex-0 h-0 text-lg">fUSDC</div>
-                </div>
-              </div>
-            </div>
-          )} */}
         </animated.div>
       </div>
     </main>
