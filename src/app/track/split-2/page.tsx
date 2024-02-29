@@ -41,7 +41,7 @@ export default function Chapter2() {
       className="flex min-h-screen flex-col items-center justify-start p-24"
       onClick={nextChat}
     >
-      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-y-scroll justify-end max-w-3xl">
+      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 justify-end max-w-3xl">
         <Block
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -96,7 +96,7 @@ export default function Chapter2() {
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={["Great. When will the DAO vote on the proposal?"]}
-                fastForward={read - 3 > 8}
+                //fastForward={read - 3 > 8}
               />
             </span>,
             ["Right. I forgot. You're clueless."],
@@ -122,23 +122,43 @@ export default function Chapter2() {
             [
               "A futarchic DAO is market-driven; for every proposal made, a pair of conditional markets like these is created. If the pass market prices META at a higher price than the fail market, the proposal passes. Otherwise, it fails.",
             ],
-            <span key="great" className="text-right text-yellow-400">
+            <span key="thatsit" className="text-yellow-400 ml-8 -mr-8">
               <BetterTypeAnimation
                 doneWaiting={() => setWaiting(false)}
                 sequence={[
                   "That's it? The DAO is just governed by conditional markets? So I've influenced the DAO to pass this proposal, because I pushed the price of pMETA upwards in the pass market?",
                 ]}
-                fastForward={read - 3 > 8}
+                //fastForward={read - 3 > 8} // todo
               />
             </span>,
             ["Yes. Welcome to Futarchy, cyberanon."],
             [
               `The market price for META in the world where this proposal passes is $${PMETA_PRICE.toLocaleString()}, and $49,003 in the world where the proposal fails.`,
             ],
+            <span key="what" className="ml-8 -mr-8 text-yellow-400">
+              <BetterTypeAnimation
+                doneWaiting={() => setWaiting(false)}
+                sequence={["Wait, that's crazy. "]}
+                // fastForward={read - 3 > 8} // todo
+              />
+            </span>,
+            <span key="huh" className="ml-8 -mr-8 text-yellow-400">
+              <BetterTypeAnimation
+                doneWaiting={() => setWaiting(false)}
+                sequence={[
+                  "Shouldn't the price in the pass market be higher?",
+                  500,
+
+                  "Shouldn't the price in the pass market be higher? There is no way the MetaDAO is worth more without using hypertronics. The crystallic yields are over 500% greater than conventional tractor beams!",
+                ]}
+                //fastForward={read - 3 > 8} //todo
+              />
+            </span>,
             [
-              "In this case, you disagree with the markets. You know hypertronics will boost the value of META, but at the moment, the markets say usage of hypertronic tractor beams would cause META to have a lower price.",
+              "Indeed. Not every market participant is a beamjunkie like you, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic.",
+              500,
+              "Indeed. Not every market participant is a beamjunkie like you, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic. Give it time, you might be glued to the nexus feed, but other tractor beam experts will take time to filter in.",
             ],
-            ["In this case, pMETA is trading below "],
           ]}
         />
       </div>

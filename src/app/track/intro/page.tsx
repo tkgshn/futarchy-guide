@@ -109,7 +109,7 @@ export default function Intro() {
         <Coinsplit />
       </Enter> */}
 
-      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 overflow-scroll justify-end">
+      <div className="mb-4 h-[30vh] w-full flex flex-col gap-4 justify-end">
         <Block1
           read={read}
           doneWaiting={() => setWaiting(false)}
@@ -118,7 +118,7 @@ export default function Intro() {
         <Block
           read={read - 3}
           doneWaiting={() => setWaiting(false)}
-          fade={step === "2"}
+          //fade={step === "2"}
           sequences={[
             [
               500,
