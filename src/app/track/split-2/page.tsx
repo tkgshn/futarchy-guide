@@ -6,7 +6,7 @@ import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
 import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
-import { animated, useSpring, useSpringRef } from "@react-spring/web"
+import { animated, useSpring } from "@react-spring/web"
 import { Redeem2 } from "@/app/redeem/page"
 
 const usePriceAnimation = (go: boolean) => {
@@ -130,9 +130,9 @@ export default function Chapter2() {
     opacity: !startedWatchingMarket || finishedWatchingMarket ? 0 : 1,
   })
 
-  const asr = useSpringRef()
+  // const asr = useSpringRef()
   const areaSizeSpring = useSpring({
-    ref: asr,
+    //ref: asr,
     maxWidth:
       (read < beginTradingDemoAfter || read > discussFutarchyAfter) &&
       !itsTimeToBeginRedemption
@@ -140,7 +140,7 @@ export default function Chapter2() {
         : "808px",
   })
 
-  const fudr = useSpringRef()
+  //const fudr = useSpringRef()
   const fusdcLeaveSpring = useSpring({
     //ref: fudr,
     opacity: discardFail ? 0 : 1,

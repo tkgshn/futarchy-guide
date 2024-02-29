@@ -14,6 +14,7 @@ import { DemoZone } from "../track/intro/DemoZone"
 import { FillableBag } from "../bag/bag"
 import { USDCBag } from "../bag/usdcbag/usdcbag"
 import clsx from "clsx"
+import { sleep } from "./sleep"
 
 function useSpringEnter() {
   const [spring, api] = useSpring(() => ({ from: { opacity: 0, y: -500 } }), [])
@@ -218,10 +219,6 @@ export function MarketBase({
       </div>
     </>
   )
-}
-
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 const LEFT_BALANCE_EACH_STEP = {
