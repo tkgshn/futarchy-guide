@@ -6,7 +6,8 @@ const font = Courier_Prime({ subsets: ["latin"], weight: "400" })
 
 export const metadata: Metadata = {
   title: "futarchy.guide",
-  description: "You have a lot to learn, cyberanon.",
+  description:
+    "You may know tractor beams, cyberanon, but you still have a lot to learn.",
   metadataBase: new URL("https://futarchy.guide"), // why would this be needed?? fuck you netlify
 }
 
