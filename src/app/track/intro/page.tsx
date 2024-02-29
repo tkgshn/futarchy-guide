@@ -168,6 +168,13 @@ export default function Intro() {
             />,*/
           ]}
         />
+        {read > 9 && (
+          <div key="borp" className="h-0 relative self-end">
+            <button className="absolute bottom-0 right-0 w-[120px] h-[48px] bg-yellow-500">
+              next page
+            </button>
+          </div>
+        )}
       </div>
       <DemoZone>
         <Market

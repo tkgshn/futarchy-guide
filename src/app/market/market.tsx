@@ -104,18 +104,24 @@ export function MisterMarket({
 }
 
 const useStupidSprings = (
-  balance: number // this is a lie. its actually like 4 minus this number
+  balance: number, // this is a lie. its actually like 4 minus this number
+  hideLPMeta: boolean
 ) => {
   const idiotBalance = 4 - balance
   const left1 = useSpring({
     left: idiotBalance > 0 ? "50%" : "0%",
+    opacity: hideLPMeta && idiotBalance > 0 ? 0 : 1,
     top: idiotBalance > 0 ? "0%" : "100%",
   })
   const left2 = useSpring({
+    opacity: hideLPMeta && idiotBalance > 1 ? 0 : 1,
+
     left: idiotBalance > 1 ? "50%" : idiotBalance > 0 ? "0%" : "3%",
     top: idiotBalance > 1 ? "0%" : idiotBalance > 0 ? "100%" : "103%",
   })
   const left3 = useSpring({
+    opacity: hideLPMeta && idiotBalance > 2 ? 0 : 1,
+
     left:
       idiotBalance > 2
         ? "50%"
@@ -134,6 +140,7 @@ const useStupidSprings = (
         : "106%",
   })
   const left4 = useSpring({
+    opacity: hideLPMeta && idiotBalance > 3 ? 0 : 1,
     left:
       idiotBalance > 3
         ? "50%"
@@ -167,6 +174,7 @@ export function MarketBase({
   bagPosition,
   targetPosition,
   rightCoin,
+  hideLPMeta,
 }: {
   left: React.ReactNode
   right: React.ReactNode
@@ -176,8 +184,12 @@ export function MarketBase({
   bagPosition: [x: string, y: string]
   targetPosition: [x: string, y: string]
   rightCoin: React.ReactNode
+  hideLPMeta?: boolean
 }) {
-  const [left1, left2, left3, left4] = useStupidSprings(leftBalance)
+  const [left1, left2, left3, left4] = useStupidSprings(
+    leftBalance,
+    hideLPMeta ?? false
+  )
 
   return (
     <>
@@ -229,6 +241,7 @@ export function Market({
   condition,
   rightLabel,
   price,
+  hideLPMeta,
 }: {
   bagPosition: [x: string, y: string]
   marketPosition: [x: string, y: string]
@@ -240,6 +253,7 @@ export function Market({
   condition?: "pass" | "fail"
   rightLabel?: string
   price?: ReactNode
+  hideLPMeta?: boolean
 }) {
   const buyLeft = useRef<null | (() => void)>(null)
   const sellLeft = useRef<null | (() => void)>(null)
@@ -299,6 +313,7 @@ export function Market({
           leftBalance={awaitedLeftAmount}
           buyLeft={buyLeft}
           sellLeft={sellLeft}
+          hideLPMeta={hideLPMeta}
           left={
             showLeftCoins &&
             (condition === undefined ? (

@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { Block } from "../intro/Block"
 import { BetterTypeAnimation } from "../intro/BetterTypeAnimation"
-import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
+import { Coin, Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
 import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
@@ -33,7 +33,7 @@ const formatCountdown = (minutes: number) => {
 const TIME_LEFT = 1440 * 4 - 870
 
 export default function Chapter2() {
-  const [read, setRead] = useState(0)
+  const [read, setRead] = useState(1)
 
   const [waiting, setWaiting] = useState(true)
 
@@ -58,9 +58,7 @@ export default function Chapter2() {
   const startedWatchingMarket = read > 26
   const finishedWatchingMarket = read > 27
 
-  //const recombineCoinsAfter = 9
-  const showCoinAfter = 99
-  const splitCoinAfter = 99
+  const itsTimeToBeginRedemption = read > 29
 
   const combineCoins = read > demonstrateMergeAfter && read <= splitBagAFter //&& read <= recombineCoinsAfter
 
@@ -265,9 +263,29 @@ export default function Chapter2() {
           read={read - 27}
           doneWaiting={() => setWaiting(false)}
           sequences={[
-            ["Congrats"],
             [
-              "Now emmy has to make a brief redeem animation? and fade to white? and polish up animation timings? and figure out how to salvage fastforward? and make a text version? and merge chapters 1 and 2? and make a back button maybe? (that would be painful). or at least ability to scroll up in the text",
+              "Nice.",
+              500,
+              "Nice. Once word spread on minetech postfeeds, every beamjunkie wanted a chance to ride the hypertronics wave.",
+            ],
+            [
+              "Once that happened, META started trading higher on the pass market than in the fail market. Therefore, the proposal passes.",
+            ],
+            <span key="huh" className="ml-8 -mr-8 text-yellow-400">
+              <BetterTypeAnimation
+                doneWaiting={() => setWaiting(false)}
+                sequence={[
+                  "POGGERS.", // todo replace with pog sticker
+                  500,
+                  "POGGERS. I'm now an early hypertronics investor. To the moon!",
+                  500,
+                ]}
+                //fastForward={read - 3 > 8} //todo
+              />
+            </span>,
+            [""],
+            [
+              "Now i has to make a brief redeem animation? and fade to white? and polish up animation timings? and figure out how to salvage fastforward? and make a text version? and merge chapters 1 and 2? and make a back button maybe? (that would be painful). or at least ability to scroll up in the text",
             ],
           ]}
         />
@@ -283,7 +301,7 @@ export default function Chapter2() {
           className={"w-full h-full flex-1 max-h-[350px] relative scale-90"}
           style={areaSizeSpring}
         >
-          {read > showPassCoinAfter && (
+          {read > showPassCoinAfter && !itsTimeToBeginRedemption && (
             <Splitter
               split={!combineCoins && read > showFailCoinAfter}
               left={
@@ -386,7 +404,16 @@ export default function Chapter2() {
               }
             />
           )}
-          {}
+          {itsTimeToBeginRedemption && (
+            <div className="relative mix-blend-lighten">
+              <div className="absolute top-[3%] left-[3%] translate-x-0">
+                <Coin condition={"pass"} />
+              </div>
+              <div className="mix-blend-normal translate-x-0">
+                <Coin condition={"pass"} />
+              </div>
+            </div>
+          )}
         </animated.div>
       </div>
     </main>
