@@ -466,7 +466,7 @@ export default function Chapter2() {
                 ], //32,
                 ["...and the pass market's tokens become regular tokens."], //33
                 [
-                  "The MetaDAO was able to capture and incorporate your knowledge because you were willing to put your money with your mouth is. The asteroid mining industry is drenched in lies and DAO manipulation, but any effort to drive the pass market down just presents opportunity to beamtech experts like yourself.",
+                  "The MetaDAO was able to capture and incorporate your knowledge because you were willing to put your money where your mouth is. The asteroid mining industry is drenched in lies and DAO manipulation, but any effort to drive the pass market down just presents opportunity to beamtech experts like yourself.",
                 ], // 33
               ]}
             />
