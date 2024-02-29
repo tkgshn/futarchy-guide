@@ -239,6 +239,7 @@ export default function Chapter2() {
 
   return (
     <>
+      {itsOver && <EndCard />}
       <Transition
         show={!itsOver}
         leave="transition-opacity duration-[5000ms]"
@@ -721,7 +722,6 @@ export default function Chapter2() {
           </div>
         </main>
       </Transition>
-      {itsOver && <EndCard />}
     </>
   )
 }
