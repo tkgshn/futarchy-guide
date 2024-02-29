@@ -7,7 +7,7 @@ import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
 import { animated, useSpring } from "@react-spring/web"
-import { Redeem2 } from "@/app/redeem/page"
+import { Redeem2 } from "@/app/redeem/redeem"
 import { Transition } from "@headlessui/react"
 
 const usePriceAnimation = (go: boolean) => {
