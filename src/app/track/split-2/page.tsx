@@ -264,7 +264,12 @@ export default function Chapter2() {
         <Block
           read={read - 27}
           doneWaiting={() => setWaiting(false)}
-          sequences={[["Congrats"]]}
+          sequences={[
+            ["Congrats"],
+            [
+              "Now emmy has to make a brief redeem animation? and fade to white? and polish up animation timings? and figure out how to salvage fastforward? and make a text version? and merge chapters 1 and 2? and make a back button maybe? (that would be painful). or at least ability to scroll up in the text",
+            ],
+          ]}
         />
       </div>
       <animated.div
