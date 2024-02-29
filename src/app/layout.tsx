@@ -1,8 +1,15 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Courier_Prime } from "next/font/google"
 import "./globals.css"
 
 const font = Courier_Prime({ subsets: ["latin"], weight: "400" })
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 0.5,
+  maximumScale: 1,
+  userScalable: false,
+}
 
 export const metadata: Metadata = {
   title: "futarchy.guide",
