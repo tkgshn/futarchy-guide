@@ -7,6 +7,7 @@ import { AnimatedEnter, Market } from "@/app/market/market"
 import { PMETA_PRICE, STARTING_USDC_BALANCE } from "@/constants"
 import clsx from "clsx"
 import { animated, useSpring } from "@react-spring/web"
+import { USDCBag } from "@/app/bag/usdcbag/usdcbag"
 
 const usePriceAnimation = (go: boolean) => {
   const spring = useSpring({
@@ -405,14 +406,27 @@ export default function Chapter2() {
             />
           )}
           {itsTimeToBeginRedemption && (
-            <div className="relative mix-blend-lighten">
-              <div className="absolute top-[3%] left-[3%] translate-x-0">
-                <Coin condition={"pass"} />
+            <>
+              <div className="h-[250px] w-[250px]">
+                <div className="relative">
+                  <div className="absolute top-[3%] left-[3%] translate-x-0">
+                    <Coin condition={"pass"} />
+                  </div>
+                  <div className="mix-blend-normal translate-x-0">
+                    <Coin condition={"pass"} />
+                  </div>
+                </div>
               </div>
-              <div className="mix-blend-normal translate-x-0">
-                <Coin condition={"pass"} />
+              <div className="relative h-[250px] w-[250px]">
+                <USDCBag
+                  amount={STARTING_USDC_BALANCE - 2 * PMETA_PRICE}
+                  condition="pass"
+                />
               </div>
-            </div>
+              <div className="relative">
+                <USDCBag amount={STARTING_USDC_BALANCE} condition="fail" />
+              </div>
+            </>
           )}
         </animated.div>
       </div>
