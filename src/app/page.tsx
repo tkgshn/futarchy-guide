@@ -60,7 +60,7 @@ const Block1 = ({
           sequence={[
             "The year is 2064.",
             500,
-            "The year is 2064. \n You just got word on the byte nexus that the Meta-dao might be the first corp to fit asteroid miners with hypertronic tractor beams.",
+            "The year is 2064. \n You just got word on the byte nexus that the MetaDAO might be the first corp to fit asteroid miners with hypertronic tractor beams.",
           ]}
         />
       )}
@@ -283,9 +283,9 @@ export default function Chapter2() {
                 [
                   "It’s low. ",
                   250,
-                  "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.",
+                  "It’s low. MetaDAO announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.",
                   250,
-                  "It’s low. Meta-dao announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early.",
+                  "It’s low. MetaDAO announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early.",
                 ],
                 [
                   "You portion out your budget",
