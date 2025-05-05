@@ -5,6 +5,7 @@ import { TypeAnimation } from "react-type-animation"
 import useMeasure from "react-use-measure"
 import clsx from "clsx"
 import { sleep } from "@/app/market/sleep"
+import ReactMarkdown from 'react-markdown'
 
 export const defaultParams = {
   //splitter: (str: string) => str.split(/(?= )/),
@@ -46,7 +47,7 @@ export const BetterTypeAnimation = (
           defaultParams.className
         }
       >
-        {finalText}
+        {props.fastForward ? <ReactMarkdown>{finalText}</ReactMarkdown> : finalText}
       </div>
       <span className={clsx(props.fastForward ? "opacity-0" : "opacity-100")}>
         <TypeAnimation

@@ -1,5 +1,11 @@
 "use client"
 import { useEffect, useState } from "react"
+import { useTranslation } from 'react-i18next';
+import i18nConfig from '../../next-i18next.config';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import HttpBackend from 'i18next-http-backend';
 import { Block } from "./track/intro/Block"
 import { BetterTypeAnimation } from "./track/intro/BetterTypeAnimation"
 import { Splitter, USDCoin } from "@/app/coinsplit/coinsplit"
@@ -9,6 +15,28 @@ import clsx from "clsx"
 import { animated, useSpring } from "@react-spring/web"
 import { Redeem2 } from "@/app/redeem/redeem"
 import { Transition } from "@headlessui/react"
+import ReactMarkdown from 'react-markdown';
+import React, { Suspense } from 'react';
+
+i18n
+  .use(HttpBackend)
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: i18nConfig.i18n.defaultLocale,
+    supportedLngs: i18nConfig.i18n.locales,
+    defaultNS: 'common',
+    ns: ['common'],
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    detection: {
+      order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+    },
+    react: {
+      useSuspense: true,
+    },
+  });
 
 const usePriceAnimation = (go: boolean) => {
   const spring = useSpring({
@@ -19,7 +47,7 @@ const usePriceAnimation = (go: boolean) => {
 /** input: number of minutes
  * output: formatted string in form of: 00d 00h 00m
  */
-const formatCountdown = (minutes: number) => {
+const formatCountdown = (minutes: number, t: (key: string, options?: any) => string) => {
   const days = Math.floor(minutes / 1440)
   const hours = Math.floor((minutes % 1440) / 60)
   const remainingMinutes = Math.floor(minutes % 60)
@@ -28,7 +56,7 @@ const formatCountdown = (minutes: number) => {
   const formattedHours = hours.toString().padStart(2, "0")
   const formattedMinutes = remainingMinutes.toString().padStart(2, "0")
 
-  return `${formattedDays}d ${formattedHours}h ${formattedMinutes}m`
+  return t('countdown', { days: formattedDays, hours: formattedHours, minutes: formattedMinutes });
 }
 
 //
@@ -43,6 +71,7 @@ const Block1 = ({
   doneWaiting: () => void
   fade: boolean
 }) => {
+  const { t } = useTranslation('common');
   const spring = useSpring({
     from: { opacity: 1 },
     to: {
@@ -58,9 +87,9 @@ const Block1 = ({
           doneWaiting={doneWaiting}
           fastForward={read > 0}
           sequence={[
-            "The year is 2064.",
+            t('intro.block1_1'),
             500,
-            "The year is 2064. \n You just got word on the byte nexus that the MetaDAO might be the first corp to fit asteroid miners with hypertronic tractor beams.",
+            t('intro.block1_1_full'),
           ]}
         />
       )}
@@ -69,9 +98,9 @@ const Block1 = ({
           doneWaiting={doneWaiting}
           fastForward={read > 1}
           sequence={[
-            "You know tractor beams like the back of your hand.",
+            t('intro.block1_2'),
             500,
-            "You know tractor beams like the back of your hand. The biggest beam corps from Earth say hypertronic isn’t worth the plutonium, they say it barely moves the needle.",
+            t('intro.block1_2_full'),
           ]}
         />
       )}
@@ -80,9 +109,9 @@ const Block1 = ({
           doneWaiting={doneWaiting}
           fastForward={read > 2}
           sequence={[
-            "Yeah right.",
+            t('intro.block1_3'),
             500,
-            "Yeah right. Hypertronic changes everything.",
+            t('intro.block1_3_full'),
           ]}
         />
       )}
@@ -90,33 +119,37 @@ const Block1 = ({
         <BetterTypeAnimation
           fastForward={read > 3}
           doneWaiting={doneWaiting}
-          sequence={["You want in."]}
+          sequence={[t('intro.block1_4')]}
         />
       )}
     </animated.div>
   )
 }
 
-const EndCard = () => (
-  <main className="endcard flex min-h-screen flex-col items-center justify-start p-24 absolute top-0 left-0 right-0 bottom-0">
-    <div className="mb-20 h-[30vh] w-full flex flex-col justify-end max-w-3xl">
-      <Block
-        neverFade
-        read={1}
-        doneWaiting={() => {}}
-        sequences={[
-          [
-            "Thank you for letting me be your futarchy guide.",
-            500,
-            "Thank you for letting me be your futarchy guide. Welcome to the MetaDAO, cyberanon. ",
-          ],
-        ]}
-      />
-    </div>
-  </main>
-)
+const EndCard = () => {
+  const { t } = useTranslation('common');
+  return (
+    <main className="endcard flex min-h-screen flex-col items-center justify-start p-24 absolute top-0 left-0 right-0 bottom-0">
+      <div className="mb-20 h-[30vh] w-full flex flex-col justify-end max-w-3xl">
+        <Block
+          neverFade
+          read={1}
+          doneWaiting={() => { }}
+          sequences={[
+            [
+              t('outro.thankYou'),
+              500,
+              t('outro.welcome'),
+            ],
+          ]}
+        />
+      </div>
+    </main>
+  )
+}
 
-export default function Chapter2() {
+function Chapter2Content() {
+  const { t } = useTranslation('common');
   const [read, setRead] = useState(-9)
 
   const chapterOneRead = read + 9
@@ -127,9 +160,7 @@ export default function Chapter2() {
 
   const nextChat = () => {
     setWaiting(true)
-    // if (!waiting) {
     setRead((prev) => prev + 1)
-    //}
   }
 
   const showPassCoinAfter = 4
@@ -158,8 +189,8 @@ export default function Chapter2() {
     read <= buypMetaAfter
       ? PMETA_PRICE
       : !startedWatchingMarket
-      ? PMETA_PRICE + 2
-      : 51200
+        ? PMETA_PRICE + 2
+        : 51200
   const failPrice = !startedWatchingMarket ? 49003 : 48300
   const [priceSpring, priceApi] = useSpring(
     () => ({
@@ -222,7 +253,7 @@ export default function Chapter2() {
     //ref: asr,
     maxWidth:
       (read < beginTradingDemoAfter || read > discussFutarchyAfter) &&
-      !itsTimeToBeginRedemption
+        !itsTimeToBeginRedemption
         ? "606px"
         : "606px",
   })
@@ -236,6 +267,14 @@ export default function Chapter2() {
   //useChain([fudr, asr])
 
   const itsOver = read > 34
+
+  // Calculate USDC amounts for translation interpolation
+  const usdcAmountRemaining = STARTING_USDC_BALANCE - PMETA_PRICE * 2;
+  const usdcAmountStart = STARTING_USDC_BALANCE;
+
+  // Calculate prices for translation interpolation
+  const formattedPassPrice = (PMETA_PRICE + 2).toLocaleString();
+  const formattedFailPrice = (49003).toLocaleString();
 
   return (
     <>
@@ -259,179 +298,161 @@ export default function Chapter2() {
             <Block
               read={chapterOneRead - 3}
               doneWaiting={() => setWaiting(false)}
-              //fade={step === "2"}
               sequences={[
                 [
                   500,
-                  "You’ve traded DAO shares before. It’s not all that different from how your mom traded stocks on the oldnet in 2020. You can get all the META you want, as long as you have the cash. ",
+                  t('intro.block2_1'),
                 ],
                 [
-                  "That's where the market comes in.",
+                  t('intro.block2_2'),
                   250,
-                  "That's where the market comes in..",
+                  t('intro.block2_2') + "..",
                   250,
-                  "That's where the market comes in...",
+                  t('intro.block2_2') + "...",
                   500,
                   () => setMarketStep(Math.max(marketStep, 1)),
-                  "That's where the market comes in.",
+                  t('intro.block2_2'),
                 ],
                 [
-                  "You check out prices.",
+                  t('intro.block2_3'),
                   500,
-                  "You check out prices. 1 META = 49,000 USDC.", // TODO animate this
+                  t('intro.block2_3_price'),
                 ],
                 [
-                  "It’s low. ",
+                  t('intro.block2_4'),
                   250,
-                  "It’s low. MetaDAO announced exploratory investment in hypertronics a month ago and the price has barely moved an inch.",
+                  t('intro.block2_4_full'),
                   250,
-                  "It’s low. MetaDAO announced exploratory investment in hypertronics a month ago and the price has barely moved an inch. You’re still early.",
+                  t('intro.block2_4_early'),
                 ],
                 [
-                  "You portion out your budget",
+                  t('intro.block2_5'),
                   500,
                   () => setMarketStep(Math.max(marketStep, 2)),
                   1000,
-
-                  "You portion out your budget and buy a few META. ",
+                  t('intro.block2_5_full'),
                   500,
                   () => setMarketStep(Math.max(marketStep, 3)),
                   1500,
                 ],
                 [
-                  "Woah woah, slow down. MetaDAO is a *futarchy*. Sure, you can trade this news on the spot market, but there’s a *much better* way. Go ahead and undo that purchase. You’ll thank me later.",
+                  t('intro.block2_6'),
                   () => setMarketStep(Math.max(marketStep, 4)),
                   1500,
                 ],
-                /*<BetterTypeAnimation
-              key="wumbo1"
-              doneWaiting={() => setWaiting(false)}
-              sequence={["a"]}
-              fastForward={read - 3 > 8}
-            />,*/
               ]}
             />
             <Block
               read={read}
               doneWaiting={() => setWaiting(false)}
-              //fade={false}
               sequences={[
-                [
-                  "You see, rolling out hypertronic tractor beams is still a *proposal*. You only want to buy META in the event that that proposal passes, right? If the proposal fails, your investment thesis -- and the MetaDAO's efforts to grow mining revenue -- will fail right along with it.",
-                ], // 1
-                [
-                  "What you want is for your investment to be *conditional* on the proposal passing. That way, if the proposal fails, you'll have kept your money.",
-                ], // 2
-                [
-                  "You need a way to be holding META in the case where the proposal passes, while at the same time holding USDC in the case where the proposal fails.",
-                ], // 3
-                [
-                  "How? Let's take a step back. It's time to learn about conditional tokens. For every active proposal, the MetaDAO lets you create conditional tokens.",
-                ], // 4
+                <ReactMarkdown
+                  key="ct1_1"
+                  components={{
+                    p: ({ node, ...props }) => <p className="text-2xl whitespace-pre-line" {...props} />
+                  }}
+                >
+                  {t('conditionalTokens.block1_1')}
+                </ReactMarkdown>,
+                <ReactMarkdown
+                  key="ct1_2"
+                  components={{
+                    p: ({ node, ...props }) => <p className="text-2xl whitespace-pre-line" {...props} />
+                  }}
+                >
+                  {t('conditionalTokens.block1_2')}
+                </ReactMarkdown>,
+                [t('conditionalTokens.block1_3')],
+                [t('conditionalTokens.block1_4')],
                 [
                   500,
-                  "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal.", // todo insert gag about renaming the token.
+                  t('conditionalTokens.block1_5'),
                   500,
-                  "What you're looking at now is 1 USDC, *conditional* upon passing the hypertronics proposal. If the proposal passes, it will turn into 1 USDC.", //insert gag about renaming the token.
-                ], // 5
-                ['For short, we\'ll call it "pass USDC", or pUSDC.'], // 6
-                ["Likewise, it has a sister token: fUSDC."], //7
+                  t('conditionalTokens.block1_5_full'),
+                ],
+                [t('conditionalTokens.block1_6')],
+                [t('conditionalTokens.block1_7')],
+                [t('conditionalTokens.block1_8')],
+                [t('conditionalTokens.block1_9')],
+                <ReactMarkdown
+                  key="ct1_10"
+                  components={{
+                    p: ({ node, ...props }) => <p className="text-2xl whitespace-pre-line" {...props} />
+                  }}
+                >
+                  {t('conditionalTokens.block1_10')}
+                </ReactMarkdown>,
+                [t('conditionalTokens.block1_11')],
+                [t('conditionalTokens.block1_12')],
                 [
-                  "If the proposal passes, the pUSDC will become USDC. If the proposal fails, the fUSDC will become USDC.",
-                ], //8
-                ["Thus, having one of each is the same as just having 1 USDC."], //9
-                [
-                  "That's not the interesting part. The interesting part is that you can *trade* each of them separately, for conditional META.",
-                ], //10  // todo timing
-                ["Get out your USDC again, let's split it."], // 11 //todo timing
-                [
-                  "As I mentioned, you can trade your pUSDC and fUSDC separately. There's a market for each.",
-                ], //12 //todo timing
-                [
-                  "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails.",
+                  t('conditionalTokens.block1_13'),
                   500,
-                  "What you want is to have META in the event that the proposal passes, but keep your USDC in the event that the proposal fails. That means you want to trade your pUSDC for pMETA, but keep your fUSDC.",
-                ], //13
+                  t('conditionalTokens.block1_13_full'),
+                ],
                 [
-                  "Perfect.",
+                  t('conditionalTokens.block1_14'),
                   500,
-                  "Perfect. Now you've invested like a proper futarchic cyberdenizen.",
+                  t('conditionalTokens.block1_14_cyber'),
                   500,
-                  `Perfect. Now you've invested like a proper futarchic cyberdenizen. If the proposal passes, you'll have 2 META and $${
-                    STARTING_USDC_BALANCE - PMETA_PRICE * 2
-                  } USDC. If the proposal fails, you'll have $${STARTING_USDC_BALANCE} USDC, just as you started.`,
-                ], //14
-                <span key="great" className="text-yellow-400 ml-8 -mr-8">
+                  t('conditionalTokens.block1_14_full', { usdc: usdcAmountRemaining, usdc_start: usdcAmountStart }),
+                ],
+                <span key="great" className="text-yellow-400 ml-8 -mr-8 text-2xl">
                   <BetterTypeAnimation
                     doneWaiting={() => setWaiting(false)}
-                    sequence={[
-                      "Great. When will the DAO vote on the proposal?",
-                    ]}
+                    sequence={[t('conditionalTokens.block1_15_prompt')]}
                     fastForward={read > 15}
                   />
-                </span>, //15
-                ["Right. I forgot. You're clueless."], //16
+                </span>,
+                [t('conditionalTokens.block1_16')],
               ]}
             />
             <Block
               read={read - 16}
               doneWaiting={() => setWaiting(false)}
-              //fade={false}
               sequences={[
-                [
-                  "You didn't realize it yet, but this *is* the vote, and you just voted.",
-                ], //17
-                [
-                  "You're done investing, so let's forget about your tokens for a moment and just focus on the markets.",
-                ], //18
-                /*  [
-              "To be clear-- your investment doesn't actually require you to understand how the MetaDAO is governed. If the proposal passes, you invest, and if it doesn't, you don't; you don't need to predict whether the proposal passes, because in either case, you've already allocated your funds the way you wanted.",
-            ], */
-                [
-                  "Because the markets are separate, their prices will diverge; traders come to a consensus on the price of META in the world where the proposal passes, and a separate consensus on the price of META if the proposal fails.",
-                ], //19
-                [
-                  "A futarchic DAO is market-driven; for every proposal made, a pair of conditional markets like these is created. If the pass market prices META at a higher price than the fail market, the proposal passes. Otherwise, it fails.",
-                ], //20
-                <span key="thatsit" className="text-yellow-400 ml-8 -mr-8">
+                <ReactMarkdown
+                  key="f1_1"
+                  components={{
+                    p: ({ node, ...props }) => <p className="text-2xl whitespace-pre-line" {...props} />
+                  }}
+                >
+                  {t('futarchy.block1_1')}
+                </ReactMarkdown>,
+                [t('futarchy.block1_2')],
+                [t('futarchy.block1_3')],
+                [t('futarchy.block1_4')],
+                <span key="thatsit" className="text-yellow-400 ml-8 -mr-8 text-2xl">
                   <BetterTypeAnimation
                     doneWaiting={() => setWaiting(false)}
-                    sequence={[
-                      "That's it? The DAO is just governed by conditional markets? So I've influenced the DAO to pass this proposal, because I pushed the price of pMETA upwards in the pass market?",
-                    ]}
+                    sequence={[t('futarchy.block1_5_prompt')]}
                     fastForward={read > 21}
                   />
-                </span>, //21
-                ["Yes. Welcome to Futarchy, cyberanon."], //22
-                [
-                  `The market price for META in the world where this proposal passes is $${(
-                    PMETA_PRICE + 2
-                  ).toLocaleString()}, and $49,003 in the world where the proposal fails.`,
-                ], //23
-                <span key="what" className="ml-8 -mr-8 text-yellow-400">
+                </span>,
+                [t('futarchy.block1_6')],
+                [t('futarchy.block1_7', { passPrice: formattedPassPrice, failPrice: formattedFailPrice })],
+                <span key="what" className="text-yellow-400 ml-8 -mr-8 text-2xl">
                   <BetterTypeAnimation
                     doneWaiting={() => setWaiting(false)}
-                    sequence={["Wait, that's crazy. "]}
-                    fastForward={read > 24} // todo
+                    sequence={[t('futarchy.block1_8_prompt')]}
+                    fastForward={read > 24}
                   />
-                </span>, //24
-                <span key="huh" className="ml-8 -mr-8 text-yellow-400">
+                </span>,
+                <span key="huh" className="text-yellow-400 ml-8 -mr-8 text-2xl">
                   <BetterTypeAnimation
                     doneWaiting={() => setWaiting(false)}
                     sequence={[
-                      "Shouldn't the price in the pass market be higher?",
+                      t('futarchy.block1_9_prompt'),
                       500,
-
-                      "Shouldn't the price in the pass market be higher? There is no way the MetaDAO is worth more without using hypertronics. The crystallic yields are over 500% greater than conventional tractor beams!",
+                      t('futarchy.block1_9_prompt_full'),
                     ]}
-                    fastForward={read > 25} //todo
+                    fastForward={read > 25}
                   />
-                </span>, //25
+                </span>,
                 [
-                  "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic.",
+                  t('futarchy.block1_10'),
                   500,
-                  "Indeed. Not every market participant is a beamjunkie like yourself, and the big players in conventional beamtech have say-for-pay goons all over socialnet FUDing hypertronic. Give it time, you might be glued to the nexus feed, but other tractor beam experts will take time to filter in.",
-                ], // 26
+                  t('futarchy.block1_10_full'),
+                ],
               ]}
             />
             <Block
@@ -439,36 +460,22 @@ export default function Chapter2() {
               doneWaiting={() => setWaiting(false)}
               sequences={[
                 [
-                  "Nice.",
+                  t('resolution.block1_1'),
                   500,
-                  "Nice. Once word spread on minetech postfeeds, every beamjunkie wanted a chance to ride the hypertronics wave.",
-                ], //28
-                [
-                  "Once that happened, META started trading higher on the pass market than in the fail market. Therefore, the proposal passes.",
-                ], //29
-                <span key="huh" className="ml-8 -mr-8 text-yellow-400">
+                  t('resolution.block1_1_full'),
+                ],
+                [t('resolution.block1_2')],
+                <span key="rational" className="text-yellow-400 ml-8 -mr-8 text-2xl">
                   <BetterTypeAnimation
                     doneWaiting={() => setWaiting(false)}
-                    sequence={["That is most rational."]}
-                    /* speed={7}
-                sequence={[
-                  "Lets freaking go.",
-                  250,
-                  "Lets freaking go!",
-                  250,
-                  "Lets freaking go!!!",
-                ]} */
-                    fastForward={read > 30} //todo
+                    sequence={[t('resolution.block1_3_prompt')]}
+                    fastForward={read > 30}
                   />
-                </span>, //30
-                ["Here are your tokens again."], // 31
-                [
-                  "Since the proposal did not fail, the fail market is cancelled... ",
-                ], //32,
-                ["...and the pass market's tokens become regular tokens."], //33
-                [
-                  "The MetaDAO was able to capture and incorporate your knowledge because you were willing to put your money where your mouth is. The asteroid mining industry is drenched in lies and DAO manipulation, but any effort to drive the pass market down just presents opportunity to beamtech experts like yourself.",
-                ], // 33
+                </span>,
+                [t('resolution.block1_4')],
+                [t('resolution.block1_5')],
+                [t('resolution.block1_6')],
+                [t('resolution.block1_7')],
               ]}
             />
             <Block
@@ -477,18 +484,18 @@ export default function Chapter2() {
               doneWaiting={() => setWaiting(false)}
               sequences={[
                 [
-                  "Thank you for letting me be your futarchy guide.",
+                  t('outro.thankYou'),
                   500,
-                  "Thank you for letting me be your futarchy guide. Welcome to the MetaDAO, cyberanon. ",
+                  t('outro.welcome'),
                 ],
               ]}
             />
           </div>
           <animated.div
-            /** the countdown */ className={"text-2xl"}
+            className={"text-2xl"}
             style={clockOpacity}
           >
-            {clockSpring.clock.to((x) => formatCountdown(x))}
+            {clockSpring.clock.to((x) => formatCountdown(x, t))}
           </animated.div>
           <div className="w-full flex-1 flex flex-col py-12 justify-center items-center select-none mb-20">
             <animated.div
@@ -536,7 +543,7 @@ export default function Chapter2() {
                       >
                         <USDCoin
                           condition="pass"
-                          label={!combineCoins ? "1 pUSDC" : "1 USDC"}
+                          label={t(combineCoins ? 'usdcLabel' : 'pusdcLabel')}
                         />
                       </Transition>
                       {read <= beginTradingDemoAfter ? null : (
@@ -554,35 +561,16 @@ export default function Chapter2() {
                                 )}
                               >
                                 <Market
-                                  showCoins={
-                                    read <= discussFutarchyAfter ||
-                                    itsTimeToBeginRedemption
-                                  }
+                                  showCoins={read <= discussFutarchyAfter || itsTimeToBeginRedemption}
                                   showMarket={read > showMarketsAfter}
                                   hideLPMeta={startedWatchingMarket}
-                                  showLeftCoins={
-                                    read > buypMetaAfter ||
-                                    itsTimeToBeginRedemption
-                                  }
-                                  bagPosition={
-                                    read > showMarketsAfter
-                                      ? ["100%", "100%"]
-                                      : ["50%", "50%"]
-                                  }
-                                  marketPosition={
-                                    read <= discussFutarchyAfter ||
-                                    itsTimeToBeginRedemption
-                                      ? ["50%", "0%"]
-                                      : ["50%", "50%"]
-                                  }
+                                  showLeftCoins={read > buypMetaAfter || itsTimeToBeginRedemption}
+                                  bagPosition={read > showMarketsAfter ? ["100%", "100%"] : ["50%", "50%"]}
+                                  marketPosition={read <= discussFutarchyAfter || itsTimeToBeginRedemption ? ["50%", "0%"] : ["50%", "50%"]}
                                   amountLeft={read <= buypMetaAfter ? 0 : 2}
-                                  amountRight={
-                                    read <= buypMetaAfter
-                                      ? STARTING_USDC_BALANCE
-                                      : STARTING_USDC_BALANCE - PMETA_PRICE * 2
-                                  }
+                                  amountRight={read <= buypMetaAfter ? STARTING_USDC_BALANCE : STARTING_USDC_BALANCE - PMETA_PRICE * 2}
                                   condition="pass"
-                                  rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                                  rightLabel={t(combineCoins ? 'usdcLabel' : 'pusdcLabel')}
                                   price={
                                     <animated.span>
                                       {priceSpring.passPrice.to((x) =>
@@ -596,7 +584,7 @@ export default function Chapter2() {
                             right={
                               <div
                                 className={clsx(
-                                  "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700", //I honestly dont even know why -75% is the (close enough to) right number here and im sorry
+                                  "relative w-[404px] h-[300px] transition-transform ease-in-out duration-700",
                                   read > discussFutarchyAfter &&
                                     (!itsTimeToBeginRedemption || discardFail)
                                     ? "scale-100"
@@ -604,34 +592,15 @@ export default function Chapter2() {
                                 )}
                               >
                                 <Market
-                                  showCoins={
-                                    read <= discussFutarchyAfter ||
-                                    itsTimeToBeginRedemption
-                                  }
+                                  showCoins={read <= discussFutarchyAfter || itsTimeToBeginRedemption}
                                   showMarket={read > showMarketsAfter}
                                   hideLPMeta={startedWatchingMarket}
-                                  showLeftCoins={
-                                    read > buypMetaAfter ||
-                                    itsTimeToBeginRedemption
-                                  }
-                                  bagPosition={
-                                    read > showMarketsAfter
-                                      ? ["100%", "100%"]
-                                      : ["50%", "50%"]
-                                  }
-                                  marketPosition={
-                                    read <= discussFutarchyAfter ||
-                                    itsTimeToBeginRedemption
-                                      ? ["50%", "0%"]
-                                      : ["50%", "50%"]
-                                  }
+                                  showLeftCoins={read > buypMetaAfter || itsTimeToBeginRedemption}
+                                  bagPosition={read > showMarketsAfter ? ["100%", "100%"] : ["50%", "50%"]}
+                                  marketPosition={read <= discussFutarchyAfter || itsTimeToBeginRedemption ? ["50%", "0%"] : ["50%", "50%"]}
                                   amountLeft={read <= buypMetaAfter ? 0 : 2}
-                                  amountRight={
-                                    read <= buypMetaAfter
-                                      ? STARTING_USDC_BALANCE
-                                      : STARTING_USDC_BALANCE - PMETA_PRICE * 2
-                                  }
-                                  rightLabel={!combineCoins ? "pUSDC" : "USDC"}
+                                  amountRight={read <= buypMetaAfter ? STARTING_USDC_BALANCE : STARTING_USDC_BALANCE - PMETA_PRICE * 2}
+                                  rightLabel={t(combineCoins ? 'usdcLabel' : 'pusdcLabel')}
                                   price={
                                     <animated.span>
                                       {priceSpring.passPrice.to((x) =>
@@ -664,7 +633,7 @@ export default function Chapter2() {
                         >
                           <USDCoin
                             condition="fail"
-                            label={!combineCoins ? "1 fUSDC" : "1 USDC"}
+                            label={t(combineCoins ? 'usdcLabel' : 'fusdcLabel')}
                           />
                         </Transition>
                       ) : read <= beginTradingDemoAfter ? null : (
@@ -680,28 +649,16 @@ export default function Chapter2() {
                               )}
                             >
                               <Market
-                                showCoins={
-                                  read <= discussFutarchyAfter ||
-                                  itsTimeToBeginRedemption
-                                }
+                                showCoins={read <= discussFutarchyAfter || itsTimeToBeginRedemption}
                                 showMarket={read > showMarketsAfter}
                                 hideLPMeta={startedWatchingMarket}
                                 showLeftCoins={false}
-                                bagPosition={
-                                  read > showMarketsAfter
-                                    ? ["100%", "100%"]
-                                    : ["50%", "50%"]
-                                }
-                                marketPosition={
-                                  read <= discussFutarchyAfter ||
-                                  itsTimeToBeginRedemption
-                                    ? ["50%", "0%"]
-                                    : ["50%", "50%"]
-                                }
+                                bagPosition={read > showMarketsAfter ? ["100%", "100%"] : ["50%", "50%"]}
+                                marketPosition={read <= discussFutarchyAfter || itsTimeToBeginRedemption ? ["50%", "0%"] : ["50%", "50%"]}
                                 amountLeft={0}
                                 amountRight={STARTING_USDC_BALANCE}
                                 condition="fail"
-                                rightLabel={!combineCoins ? "fUSDC" : "USDC"}
+                                rightLabel={t(combineCoins ? 'usdcLabel' : 'fusdcLabel')}
                                 price={
                                   <animated.span>
                                     {priceSpring.failPrice.to((x) =>
@@ -723,5 +680,13 @@ export default function Chapter2() {
         </main>
       </Transition>
     </>
-  )
+  );
+}
+
+export default function Chapter2() {
+  return (
+    <Suspense fallback={<div>Loading translations...</div>}>
+      <Chapter2Content />
+    </Suspense>
+  );
 }
