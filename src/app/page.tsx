@@ -20,19 +20,23 @@ import React, { Suspense } from 'react';
 
 i18n
   .use(HttpBackend)
-  .use(LanguageDetector)
+  // Disable language detection for now to force Japanese
+  // .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: i18nConfig.i18n.defaultLocale,
-    supportedLngs: i18nConfig.i18n.locales,
+    // Force Japanese language
+    lng: 'ja',
+    fallbackLng: 'ja', // Set fallback to Japanese as well
+    supportedLngs: i18nConfig.i18n.locales, // Keep supported languages
     defaultNS: 'common',
     ns: ['common'],
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
-    detection: {
+    // detection options are not needed when lng is forced
+    /* detection: {
       order: ['querystring', 'cookie', 'localStorage', 'sessionStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
-    },
+    }, */
     react: {
       useSuspense: true,
     },
